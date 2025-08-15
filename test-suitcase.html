@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Suitcase Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        #suitcase3DContainer {
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+        
+        #suitcase3DContainer canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .info {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="suitcase3DContainer">
+        <div class="info">Loading 3D Suitcase Scene...</div>
+    </div>
+
+    <script type="module">
+        import * as THREE from './node_modules/three/build/three.module.js';
+        import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+
+        class SuitcaseTest {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.suitcaseModel = null;
+                this.animationId = null;
+                this.container = document.getElementById('suitcase3DContainer');
+                
+                this.init();
+            }
+
+            init() {
+                this.initScene();
+                this.initCamera();
+                this.initRenderer();
+                this.initLights();
+                this.loadSuitcaseModel();
+                this.animate();
+            }
+
+            initScene() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x000000);
+            }
+
+            initCamera() {
+                this.camera = new THREE.PerspectiveCamera(75, 350 / 350, 0.1, 1000);
+                this.camera.position.set(0, 0, 5);
+                this.camera.lookAt(0, 0, 0);
+            }
+
+            initRenderer() {
+                this.renderer = new THREE.WebGLRenderer({ 
+                    antialias: true,
+                    alpha: false 
+                });
+                this.renderer.setSize(350, 350);
+                this.renderer.setPixelRatio(window.devicePixelRatio);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.container.innerHTML = '';
+                this.container.appendChild(this.renderer.domElement);
+            }
+
+            initLights() {
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+                this.scene.add(ambientLight);
+
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(5, 5, 5);
+                directionalLight.castShadow = true;
+                this.scene.add(directionalLight);
+
+                const pointLight = new THREE.PointLight(0xffffff, 0.5);
+                pointLight.position.set(-5, 5, 5);
+                this.scene.add(pointLight);
+            }
+
+            loadSuitcaseModel() {
+                const loader = new GLTFLoader();
+                
+                loader.load(
+                    './src/models/suitcase.glb',
+                    (gltf) => {
+                        this.suitcaseModel = gltf.scene;
+                        
+                        this.suitcaseModel.traverse((child) => {
+                            if (child.isMesh) {
+                                child.castShadow = true;
+                                child.receiveShadow = true;
+                            }
+                        });
+
+                        const box = new THREE.Box3().setFromObject(this.suitcaseModel);
+                        const center = box.getCenter(new THREE.Vector3());
+                        const size = box.getSize(new THREE.Vector3());
+                        
+                        this.suitcaseModel.position.sub(center);
+                        
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        const scale = 2 / maxDim;
+                        this.suitcaseModel.scale.setScalar(scale);
+                        
+                        this.scene.add(this.suitcaseModel);
+                        console.log('Suitcase model loaded successfully');
+                    },
+                    (progress) => {
+                        console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+                    },
+                    (error) => {
+                        console.error('Error loading suitcase model:', error);
+                        this.createFallbackSuitcase();
+                    }
+                );
+            }
+
+            createFallbackSuitcase() {
+                const geometry = new THREE.BoxGeometry(2, 1, 1);
+                const material = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+                this.suitcaseModel = new THREE.Mesh(geometry, material);
+                this.suitcaseModel.castShadow = true;
+                this.suitcaseModel.receiveShadow = true;
+                this.scene.add(this.suitcaseModel);
+                console.log('Fallback suitcase created');
+            }
+
+            animate() {
+                this.animationId = requestAnimationFrame(() => this.animate());
+                
+                if (this.suitcaseModel) {
+                    this.suitcaseModel.rotation.y += 0.01;
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize the test scene
+        new SuitcaseTest();
+    </script>
+</body>
+</html>

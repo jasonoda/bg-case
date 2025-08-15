@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Jewel Match</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chonburi:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/main.css">
+
+    <!--meta---------------------------------------------------------------------------------------------------------- -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-K8LPL4T9LY");
+    </script>
+
+    <script>
+      window.addEventListener("load", (event) => {
+        window.parent.postMessage(
+          JSON.stringify({
+            type: "GameLoaded",
+          }),
+          "*"
+        );
+      });
+
+      // Wait for DOM to be fully loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        // Game logic is now handled in scene.js
+        
+        // Mobile viewport height fix
+        function setMobileViewportHeight() {
+          if (window.innerWidth <= 768) {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            // Force layout recalculation
+            document.body.style.height = `${window.innerHeight}px`;
+            document.documentElement.style.height = `${window.innerHeight}px`;
+          }
+        }
+        
+        // Set initial height
+        setMobileViewportHeight();
+        
+        // Update on resize and orientation change
+        window.addEventListener('resize', setMobileViewportHeight);
+        window.addEventListener('orientationchange', () => {
+          setTimeout(setMobileViewportHeight, 100);
+        });
+        
+        // iOS Safari specific fixes
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+          document.body.style.webkitTransform = 'translateZ(0)';
+          document.body.style.transform = 'translateZ(0)';
+        }
+      });
+    </script>
+
+</head>
+
+<body>
+
+    <div id="backgroundImage"></div>
+
+    <div id="tempBlocker"></div>
+    
+    <div id="hideMe"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></div>
+
+    <div id="feedback">Jewel Match - Drag jewels to swap adjacent pieces</div>
+
+    <!-- Additional UI Elements -->
+    <div class="ui" id="levelDiv"></div>
+    <!-- <div class="ui" id="scoreDiv">SCORE: 0</div> -->
+    <div class="ui" id="timerDiv">2:00</div>
+    <div class="ui" id="frameCounter">FPS: 0</div>
+    <button id="caseValueDiv" class="deal-button">TAKE DEAL: $0</button>
+    <div id="scorePopup">+100</div>
+    
+    <!-- Case Value Reveal Window -->
+    <div id="caseRevealWindow" style="display: none;">
+        <div id="caseRevealContent">
+            <div id="caseRevealTitle">CASE VALUE</div>
+            <div id="caseRevealValue">0</div>
+            <div id="caseRevealClose">CLOSE</div>
+        </div>
+    </div>
+    
+    <!-- Clue Window -->
+    <div id="clueWindow" style="display: none;">
+        <div id="clueContent">
+            <div id="clueTitle">CLUES GATHERED</div>
+            <div id="noCluesMessage">No clues yet. Use the free clue button or open cases to find more clues.</div>
+            <div id="clueList">
+            </div>
+            <div id="clueClose">CLOSE</div>
+        </div>
+    </div>
+
+   
+    <!-- Start Game Overlay -->
+    <div id="startGameOverlay">
+        <div id="splashGraphic"></div>
+        <div id="startGameButton">PLAY</div>
+        <div id="instructionsButton">INSTRUCTIONS</div>
+    </div>
+    
+    <!-- Main Game Container -->
+    <div id="gameContainer">
+        <!-- Top Section - Button Grid -->
+        <div id="topSection">
+
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">1</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">2</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">3</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">4</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">5</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">6</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">7</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">8</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">9</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">10</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">11</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">12</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">13</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">14</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">15</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">16</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">17</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">18</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">19</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">20</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">21</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">22</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">23</div><div class="case-value-indicator"></div></button></div>
+            <div class="grid-cell"><button class="cell-button"><img src="src/images/case.png" alt="case" width="100%" height="100%"><div class="case-number">24</div><div class="case-value-indicator"></div></button></div>
+        </div>
+
+        <!-- Third Section - Action Buttons -->
+        <div id="thirdSection">
+            <div class="action-cell"><button class="action-button">GET CLUE</button></div>
+            <div class="action-cell"><button class="action-button">PICK 3</button></div>
+                            <div class="action-cell"><button class="action-button">DOUBLE</button></div>
+            <!-- <button id="questionButton">
+                <div class="question-mark">?</div>
+            </button> -->
+        </div>
+
+        <!-- Bottom Section - Scoring Grid -->
+        <div id="bottomSection">
+            <div class="scoring-grid">
+                <div class="score-column">
+                    <div class="score-cell header">LOW</div>
+                    <div class="score-cell">1</div>
+                    <div class="score-cell">5</div>
+                    <div class="score-cell">10</div>
+                    <div class="score-cell">25</div>
+                    <div class="score-cell">50</div>
+                    <div class="score-cell">100</div>
+                    <div class="score-cell">500</div>
+                </div>
+                <div class="score-column">
+                    <div class="score-cell header">MED</div>
+                    <div class="score-cell">2000</div>
+                    <div class="score-cell">3000</div>
+                    <div class="score-cell">5000</div>
+                    <div class="score-cell">7500</div>
+                    <div class="score-cell">10000</div>
+                    <div class="score-cell">20000</div>
+                    <div class="score-cell">25000</div>
+                </div>
+                <div class="score-column">
+                    <div class="score-cell header">HIGH</div>
+                    <div class="score-cell">50000</div>
+                    <div class="score-cell">75000</div>
+                    <div class="score-cell">100000</div>
+                    <div class="score-cell">300000</div>
+                    <div class="score-cell">500000</div>
+                    <div class="score-cell">750000</div>
+                    <div class="score-cell">1000000</div>
+                </div>
+            </div>
+           
+        </div>
+        
+    </div>
+    <div id="clueButton">YOUR CLUES</div>
+    </div>
+
+    <!-- 3D Suitcase Scene Container -->
+    <div id="suitcase3DContainer" style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        display: none;
+    "></div>
+
+    <div id="topDiv">
+    </div>
+
+    <div id="bonusDiv">
+    </div>
+
+    <!-- Start Menu -->
+    <!-- <div id="startMenu"> -->
+        <!-- <div id="startMenuContainer"> -->
+            <!-- <img id="splashImage" src="src/images/splashImage.png" alt="Splash"> -->
+            <!-- <div id="playButton">PLAY</div> -->
+            <!-- <div id="instructionsButton">INSTRUCTIONS</div> -->
+        <!-- </div> -->
+    <!-- </div> -->
+
+    <!-- Instructions Overlay -->
+    <div id="instructionsOverlay" style="display: none;">
+        <div id="instructionsContainer">
+            <div id="instructionsTitle">INSTRUCTIONS</div>
+            
+            <div id="instructionsText">
+                <div class="instructionLine"><b>SCORING:</b></div>
+                <div class="instructionLine">3 jewels = 100 points<br>4 jewels = 150 points<br>5 jewels = 200 points</div>
+                
+                <div class="instructionDivider"></div>
+                
+                <div class="instructionLine"><b>BONUS BOXES:</b></div>
+                
+                <div class="bonusItem">
+                    <img src="src/images/jewel_w.png" alt="White Bonus Box" class="bonusImage">
+                    <div class="bonusDescription">
+                        Match 5 in a row.<br>Clears jewels of a single color.
+                    </div>
+                </div>
+                
+                <div class="bonusItem">
+                    <img src="src/images/jewel_l.png" alt="Grey Bonus Box" class="bonusImage">
+                    <div class="bonusDescription">
+                        Make an L or T shape match.<br>Creates an explosion.
+                    </div>
+                </div>
+                
+                <div class="instructionDivider"></div>
+                <div class="instructionLine">2:00 time limit.</div>
+                <div class="instructionDivider"></div>
+                <div class="instructionLine">Match sets to score points.</div>
+                <div class="instructionDivider"></div>
+                <div class="instructionLine">Match faster to raise your score multiplier.</div>
+            </div>
+            
+            <div id="closeInstructionsButton">CLOSE</div>
+        </div>
+    </div>
+
+    <!-- Final Score Screen -->
+    <div id="finalDiv">
+        <div class="finalScoreOverlay"></div>
+        <div class="finalScoreContent">
+            <div id="finalScoreTitle">FINAL SCORE</div>
+            <div id="finalScoreValue">0</div>
+            
+            <div class="scoreBreakdownContainer">
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                       MATCH 3
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="match3Count">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        MATCH 4
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="match4Count">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        MATCH 5
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="match5Count">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        EXPLOSIONS
+                        <img src="src/images/jewel_l.png" alt="Grey Bonus Box" class="breakdownJewel">
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="explosionCount">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        BONUS BOX
+                        <img src="src/images/jewel_w.png" alt="White Bonus Box" class="breakdownJewel">
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="bonusBoxCount">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        SMALL BOARD CLEAR
+                        <img src="src/images/jewel_w.png" alt="White Bonus Box" class="breakdownJewel">
+                        <img src="src/images/jewel_l.png" alt="Grey Bonus Box" class="breakdownJewel">
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="smallClearCount">0
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem">
+                    <div class="breakdownLabel">
+                        BIG BOARD CLEAR
+                        <img src="src/images/jewel_w.png" alt="White Bonus Box" class="breakdownJewel">
+                        <img src="src/images/jewel_w.png" alt="White Bonus Box" class="breakdownJewel">
+                    </div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownCount" id="bigClearCount">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem totalItem" style="display: none;">
+                    <div class="breakdownLabel">BONUS POINTS</div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownTotal" id="bonusPointsTotal">0</span>
+                    </div>
+                </div>
+                
+                <div class="scoreBreakdownItem totalItem">
+                    <div class="breakdownLabel">AVERAGE BONUS MULT</div>
+                    <div class="breakdownCalculation">
+                        <span class="breakdownTotal" id="avgMultiplier">1.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- loading -->
+
+    <div id="loadingImage"></div>
+    <div id="loadingBack"></div>
+
+    
+
+    <!-- Fader elements -->
+    <div id="fader"></div>
+    <div id="faderBlack"></div>
+
+</body>
+</html>

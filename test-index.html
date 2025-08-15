@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BG Game Container</title>
+        <script>
+            // caches.keys().then(function(names) {
+            //   for (let name of names)
+            //     caches.delete(name);
+            // });
+            window.addEventListener('load', (event) => {
+                // Attach listener to our iFrame to receive inbound messages
+
+                // Load the game into our iFrame
+                const iFrame = document.getElementById('iframe-container');
+                iFrame.src = './game.html';
+            });
+        </script>
+
+        <script src="./createGameData.js"></script>
+        <script src="./validateGameData.js"></script>
+        <script src="node_modules/crypto-js/crypto-js.js"></script>
+
+        <script>
+              /**
+               * Defines the message API to communicate with our containing iFrame
+               */
+              window.GC_API = {
+                GameLoaded: "GameLoaded",
+                BreadCrumb: "BreadCrumb",
+                FinalScores: "FinalScores",
+              };
+
+              window.CG_API = {
+                InitGame: "InitGame",
+              }
+
+              window.MESSAGE_FACTORY = function(name, data) {
+                return JSON.stringify({
+                  type: name,
+                  data: data,
+                });
+              }
+
+            /**
+             * Obfuscate a plaintext string with a simple rotation algorithm similar to
+             * the rot13 cipher.
+             * @param  {[type]} key rotation index between 0 and n
+             * @param  {Number} n   maximum char that will be affected by the algorithm
+             * @return {[type]}     obfuscated string
+             */
+            String.prototype.obfs = function(key, n = 126) {
+                // return String itself if the given parameters are invalid
+                if (!(typeof(key) === 'number' && key % 1 === 0)
+                    || !(typeof(key) === 'number' && key % 1 === 0)) {
+                    return this.toString();
+                }
+
+                var chars = this.toString().split('');
+
+                for (var i = 0; i < chars.length; i++) {
+                    var c = chars[i].charCodeAt(0);
+
+                    if (c <= n) {
+                        chars[i] = String.fromCharCode((chars[i].charCodeAt(0) + key) % n);
+                    }
+                }
+
+                return chars.join('');
+            };
+
+            /**
+             * De-obfuscate an obfuscated string with the method above.
+             * @param  {[type]} key rotation index between 0 and n
+             * @param  {Number} n   same number that was used for obfuscation
+             * @return {[type]}     plaintext string
+             */
+            String.prototype.defs = function(key, n = 126) {
+                // return String itself if the given parameters are invalid
+                if (!(typeof(key) === 'number' && key % 1 === 0)
+                    || !(typeof(key) === 'number' && key % 1 === 0)) {
+                    return this.toString();
+                }
+
+                return this.toString().obfs(n - key);
+            };
+
+            // Remove this
+            // const gameLoaded = window.GC_API.GameLoaded.obfs(13); // TnzrY|nqrq
+            // const breadCrumb = window.GC_API.BreadCrumb.obfs(13); // OrnqPzo
+            // const finalScores = window.GC_API.FinalScores.obfs(13); // Sv{ny`p|r
+            // const obKey = '7e8e7829-a8f9-4404-8875-162a44543e18'.obfs(13); // DrErDE?F:nEsF:AA=A:EEDB:>C?nAABA@r>E
+            // const initGame = window.CG_API.InitGame.obfs(13); // 'V{vTnzr
+            // const obKey = '3588fb45-5e58-402e-bf54-179b3684414d'.obfs(13); // @BEEsoAB:BrBE:A=?r:osBA:>DFo@CEAA>Aq
+            // const key = '@BEEsoAB:BrBE:A=?r:osBA:>DFo@CEAA>Aq'.defs(13);
+            // console.log(key);
+
+            const validationObject = {
+                initData: null,
+                breadcrumbs: [],
+                finalData: null
+            }
+            window.addEventListener('message', function (event) {
+                try {
+                    const key = '7e8e7829-a8f9-4404-8875-162a44543e18';
+                    const ourMessage = JSON.parse(event.data);
+                    const iFrame = document.getElementById('iframe-container');
+                    console.log(">>>> "+ourMessage.type);
+                    if (ourMessage?.type) {
+                        if (ourMessage.data) {
+                            // Data is encrypted by game, so we (the back-end) will need to
+                            // decrypt it with the same key as the game is using.
+                            console.log(`Encrypted payload: ${ourMessage.data}`);
+                            var bytes  = CryptoJS.AES.decrypt(ourMessage.data, key);
+                            ourMessage.data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                        }
+                        switch (ourMessage.type) {
+                            case window.GC_API.GameLoaded:
+
+                                // When the game is fully loaded into the iFrame, it will send
+                                // this message. The react component hosting the IFRAME should
+                                // make a call to the server to (a) have the server create a game
+                                // instance record for this game, (b) generate the game's
+                                // initialization data using a class supplied by the game developer;
+                                // and return this to the game container. The game container should
+                                // then send the game initialization data to the game using this
+                                // message.
+
+                                // We are mocking things here. The container would call the server
+                                // to get the gameData.
+                                eval(createGameDataCode);
+                                validationObject.initData = createGameData();
+
+                                console.log('THE GAME HAS LOADED');
+                                console.log(validationObject.initData);
+
+                                // This encryption would be done on the server before it delivers
+                                // its payload response from the initGame API endpoint.
+                                const cipherText = CryptoJS.AES.encrypt(JSON.stringify(validationObject.initData), key).toString();
+
+                                // Send the game data to the game using this message. After sending,
+                                // we simply wait for breadcrumbs and the final score data.
+                                const initDataMessage = window.MESSAGE_FACTORY(window.CG_API.InitGame, cipherText);
+                                iFrame.contentWindow.postMessage(initDataMessage, '*');
+                                break;
+
+                            case window.GC_API.BreadCrumb:
+
+                                // The game has sent a bread crumb object that needs to be stored
+                                // in the database and associated with the game instance being played.
+                                // It is a JSON that the server will use at the end of the
+                                // game to validate the game.
+                                //
+                                // Send message.data JSON to the server as a breadcrumb to be associated
+                                // with the game instance.
+                                validationObject.breadcrumbs.push(ourMessage.data);
+                                console.log("BreadCrumb Received");
+                                console.log(ourMessage.data);
+                                break;
+
+                          case window.GC_API.FinalScores:
+
+                                // The game is now over and it has sent the final score JSON. The score
+                                // will always be in the message.data.score property, but message.data may
+                                // have additional information in it as well. The entire structure should be
+                                // sent to the server and associated with the game instance. The game instance
+                                // should be validated and marked as complete.
+                                validationObject.finalData = ourMessage.data;
+                                eval(validateGameDataCode);
+                                const goodGame = validateGameData(validationObject.initData, validationObject.breadcrumbs, validationObject.finalData);
+                                if (goodGame.isValid) {
+                                    console.log("Yeah ! The game checked out properly");
+                                } else {
+                                    console.log("Booo ! The game data was not valid");
+                                    for(var i=0; i<goodGame.reasons.length; i++){
+                                        console.log(goodGame.reasons[i]);
+                                    }
+                                }
+                                console.log("Game is complete");
+
+                                // This code will remove the iFrame and display the game data at the end of the game.
+                                setTimeout(() => {
+                                  // Remove the iFrame
+                                  iFrame.remove();
+                                  const html = '<pre>const initData = ' + JSON.stringify(validationObject.initData, null, 2) + ';<br><br>//-----<br><br>' +
+                                               'const breadcrumbs = ' + JSON.stringify(validationObject.breadcrumbs, null, 2) + ';<br><br>//-----<br><br>' +
+                                               'const finalData = ' + JSON.stringify(validationObject.finalData, null, 2) + ';<br><br>//-----<br><br>' +
+                                               'const validationObject = ' + JSON.stringify(goodGame, null, 2) + ';</pre>';
+                                  const newDiv = document.createElement("div");
+                                  const newContent = document.createTextNode(html);
+                                  newDiv.appendChild(newContent);
+                                  document.body.innerHTML = html;
+                                }, 30000);
+
+                                break;
+
+                        }
+                    }
+                } catch (e) {
+                    // Ignore exception - not a message for us and couldn't JSON parse it
+                  console.log(e);
+                }
+            });
+        </script>
+
+    </head>
+    <style>
+        html {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+        .iframe-container {
+            overflow: hidden;
+            height: 100%;
+            width: 100%
+        }
+    </style>
+    <body style="overflow: scroll;">
+        <iframe id="iframe-container" class="iframe-container" frameborder="0"  height="100%" width="100%"/>
+    </body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "name": "ghostrunner",
+  "version": "0.0.1",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack serve --config=webpack.dev.config.js --open --hot",
+    "start": "webpack serve --config=webpack.dev.config.js --open --hot",
+    "build": "webpack --config=webpack.prod.config.js",
+    "build-dev": "webpack --config=webpack.dev.config.js",
+    "clean-dev": "aws s3 rm --recursive --profile burnghost s3://dev-games.burnghost.com/ghostrun/",
+    "clean-prod": "aws s3 rm --recursive --profile burnghost s3://prod-games.burnghost.com/ghostrun/",
+    "invalidate-dev": "aws cloudfront create-invalidation --distribution-id E1HAFB2IQZBE5A  --profile burnghost --paths '/ghostrun*'",
+    "invalidate-prod": "aws cloudfront create-invalidation --distribution-id E3P3NM0CUYV1KU  --profile burnghost --paths '/ghostrun*'",
+    "deploy": "npm run clean-dev  && aws s3 cp ./build s3://dev-games.burnghost.com/ghostrun  --region us-east-1 --recursive --profile burnghost && npm run invalidate-dev",
+    "deploy-prod": "npm run clean-prod && aws s3 cp ./build s3://prod-games.burnghost.com/ghostrun --region us-east-1 --recursive --profile burnghost && npm run invalidate-prod"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "assets-webpack-plugin": "^7.1.1",
+    "cannon-es": "^0.20.0",
+    "cannon-es-debugger": "^1.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "gsap": "^3.12.5",
+    "howler": "^2.2.4",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "run-node-webpack-plugin": "^1.3.0",
+    "string-replace-loader": "^3.1.0",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.8",
+    "three": "^0.172.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-merge": "^5.8.0",
+    "webpack-obfuscator": "^3.5.1"
+  },
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "gsap": "^3.11.5",
+    "howler": "^2.2.3",
+    "pixi.js": "^7.2.4"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BurnGhostAdmin/bg-ghostrun.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BurnGhostAdmin/bg-ghostrun/issues"
+  },
+  "homepage": "https://github.com/BurnGhostAdmin/bg-ghostrun#readme",
+  "description": ""
+}

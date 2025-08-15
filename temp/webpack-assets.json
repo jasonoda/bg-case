@@ -1,0 +1,51 @@
+{
+  "index": {
+    "js": "index-bundle-bcfffaf82edcbc17da03.js"
+  },
+  "": {
+    "glb": [
+      "src/models/itemsOld.glb",
+      "src/models/items.glb",
+      "src/models/itemsFood.glb",
+      "src/models/soccerBall.glb",
+      "src/models/ped.glb"
+    ],
+    "js": "150-bundle-bcfffaf82edcbc17da03.js",
+    "mp3": [
+      "src/sounds/introMusic.mp3",
+      "src/sounds/finish.mp3",
+      "src/sounds/tick.mp3",
+      "src/sounds/start.mp3",
+      "src/sounds/cancelDrum.mp3",
+      "src/sounds/firstMega.mp3",
+      "src/sounds/loseStreak.mp3",
+      "src/sounds/match.mp3",
+      "src/sounds/bonus1.mp3",
+      "src/sounds/startBeep2.mp3",
+      "src/sounds/startBeep1.mp3",
+      "src/sounds/pickup.mp3",
+      "src/sounds/place.mp3",
+      "src/sounds/click.mp3"
+    ],
+    "png": [
+      "src/images/ref/pos-x.png",
+      "src/images/ref/pos-z.png",
+      "src/images/ref/neg-z.png",
+      "src/images/ref/neg-x.png",
+      "src/images/ref/pos-y.png",
+      "src/images/background.png",
+      "src/images/ped2.png",
+      "src/images/ped1.png",
+      "src/images/peds.png",
+      "src/images/ref/neg-y.png",
+      "src/images/sample.png",
+      "src/images/black.png"
+    ],
+    "jpg": [
+      "src/images/testImage.jpg",
+      "src/images/sample.jpg",
+      "src/images/logo.jpg"
+    ],
+    "html": "game.html"
+  }
+}
