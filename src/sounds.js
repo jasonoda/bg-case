@@ -4,9 +4,8 @@ export class Sounds {
     setUp(e) {
 
         this.e=e;
-        this.soundArray = ["click1", 
-            "match1", "match2", "match3", "match4", "match5", "match6", "match7", "match8", "match9", "match10",
-            "jewel_clear", "jewel_explosion", "jewel_result", "jewel_start", "jewel_white", "jewel_make", "jewel_cascade", "loseStreak"
+        this.soundArray = ["click1", "brightClick", "coin", "stinger", "tick",
+            "open_bad", "open_good", "open_million", "openClick", "lose", "wincase", "clue", "bingnice", 
         ];
         this.loadedSounds = [];
 
@@ -32,17 +31,17 @@ export class Sounds {
 
     p(type){
 
-        console.log('SOUND PLAY called with type:', type);
-        console.log('Total loaded sounds:', this.loadedSounds.length);
-        console.log('Looking for sound named:', type);
+        // console.log('SOUND PLAY called with type:', type);
+        // console.log('Total loaded sounds:', this.loadedSounds.length);
+        // console.log('Looking for sound named:', type);
 
         // if(this.e.soundOn===true){
             for(var i=0; i<this.loadedSounds.length; i++){
 
-                console.log('Checking sound', i, ':', this.loadedSounds[i].name);
+                // console.log('Checking sound', i, ':', this.loadedSounds[i].name);
 
                 if(this.loadedSounds[i].name===type){
-                    console.log('MATCH FOUND! Playing sound:', type);
+                    // console.log('MATCH FOUND! Playing sound:', type);
                     this.loadedSounds[i].play();
                     return; // Exit after playing
                 }

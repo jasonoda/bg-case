@@ -64,7 +64,7 @@ export class Scene {
         }
         
         // Log initial available clues for debugging
-        console.log(`Scene setup: Initial available clues: ${this.availableClues.join(', ')}`);
+        //console.log(`Scene setup: Initial available clues: ${this.availableClues.join(', ')}`);
 
         // Start background image opacity yoyo animation
         this.startBackgroundAnimation();
@@ -163,17 +163,17 @@ export class Scene {
             this.setupCaseAnimation();
             
             // Log which cases have clues
-            console.log("=== CLUE CASE ASSIGNMENTS ===");
+            //console.log("=== CLUE CASE ASSIGNMENTS ===");
             this.cases.forEach(caseObj => {
                 if (caseObj.value === "CLUE") {
-                    console.log(`Case ${caseObj.caseNumber} contains a CLUE`);
+                    //console.log(`Case ${caseObj.caseNumber} contains a CLUE`);
                 }
             });
-            console.log("=== END CLUE CASE ASSIGNMENTS ===");
+            //console.log("=== END CLUE CASE ASSIGNMENTS ===");
             
             // Add click listener to reveal window close button
             document.getElementById('caseRevealClose').addEventListener('click', () => {
-                this.hideRevealWindow();
+                // this.hideRevealWindow();
                 this.action = "choose";
             });
             
@@ -194,12 +194,13 @@ export class Scene {
                     }
                 });
             } else {
-                console.error('Clue button element not found during setup!');
+                //console.error('Clue button element not found during setup!');
             }
             
             // Add click listener to clue window close button
             document.getElementById('clueClose').addEventListener('click', () => {
-                this.hideClueWindow();
+                this.hideClueWindow();  
+                this.e.s.p("click1");
             });
             
             // Add click listener to first action button for free clue
@@ -215,6 +216,10 @@ export class Scene {
                         return;
                     }
                     this.firstActionButtonUsed = true;
+                    
+                    // Play bingnice sound for action button 1 (only if >7 cases opened)
+                    this.e.s.p("bingnice");
+                    
                     this.giveFreeClue();
                 });
             }
@@ -223,6 +228,10 @@ export class Scene {
             if (actionButtons[1]) {
                 actionButtons[1].addEventListener('click', () => {
                     if (!this.gameStarted) return; // Don't work until game starts
+                    
+                    // Play bingnice sound for action button 2
+                    this.e.s.p("bingnice");
+                    
                     this.startPickThree();
                 });
             }
@@ -231,6 +240,10 @@ export class Scene {
             if (actionButtons[2]) {
                 actionButtons[2].addEventListener('click', () => {
                     if (!this.gameStarted) return; // Don't work until game starts
+                    
+                    // Play bingnice sound for action button 3
+                    this.e.s.p("bingnice");
+                    
                     this.showDoubleWindow();
                 });
             }
@@ -258,12 +271,24 @@ export class Scene {
             const startGameButton = document.getElementById('startGameButton');
             if (startGameButton) {
                 startGameButton.addEventListener('click', () => {
+  
+                    // Play press start sound
+                    this.e.s.p("brightClick");
+                    this.e.s.p("stinger");
+
+                    document.getElementById('fader').style.opacity = .75;
+                    gsap.to(document.getElementById('fader'), {
+                        opacity: 0,
+                        duration: 1.5,
+                        ease: "linear"
+                    });
+
                     // Fade out the start game overlay quickly
                     const overlay = document.getElementById('startGameOverlay');
                     if (overlay) {
                         gsap.to(overlay, {
                             opacity: 0,
-                            duration: 0.5,
+                            duration: 0.3,
                             ease: "power2.out",
                             onComplete: () => {
                                 overlay.style.display = 'none';
@@ -273,24 +298,27 @@ export class Scene {
                                 if (gameContainer) {
                                     gsap.to(gameContainer, {
                                         opacity: 1,
-                                        duration: 1,
+                                        duration: 0.01,
                                         ease: "power2.out",
                                         onComplete: () => {
                                             // Start case animation immediately after fade-in
-                                            this.animateCasesIn();
-                                            setTimeout(() => {
-                                                this.startGame();
-                                            }, 800);
+                                           
                                         }
                                     });
                                 }
+
+                                this.animateCasesIn();
+                                setTimeout(() => {
+                                    
+                                    this.startGame();
+                                }, 1);
                                 
                                 // Also fade in the clue button at the same time
                                 const clueButton = document.getElementById('clueButton');
                                 if (clueButton) {
                                     gsap.to(clueButton, {
                                         opacity: 1,
-                                        duration: 1,
+                                        duration: 0.4,
                                         ease: "power2.out"
                                     });
                                 }
@@ -304,6 +332,7 @@ export class Scene {
             const instructionsButton = document.getElementById('instructionsButton');
             if (instructionsButton) {
                 instructionsButton.addEventListener('click', () => {
+                    this.e.s.p("click1")
                     this.showInstructionsWindow();
                 });
             }
@@ -350,8 +379,9 @@ export class Scene {
             this.selectedCase = caseObj;
             
             if (caseObj.value === "CLUE") {
-                //console.log("Clue case found:", caseObj.caseNumber);
+                ////console.log("Clue case found:", caseObj.caseNumber);
                 this.handleClueCase(caseObj);
+                this.e.s.p("clue");
             } else {
                 // Stop the flash animation for this case
                 this.stopCaseFlashAnimation(caseObj.domRef);
@@ -520,7 +550,7 @@ export class Scene {
             }
         });
         
-        console.log(`Highest unopened case: ${highestUnopenedCase ? highestUnopenedCase.caseNumber : 'none'} with value: ${highestUnopenedValue}`);
+        //console.log(`Highest unopened case: ${highestUnopenedCase ? highestUnopenedCase.caseNumber : 'none'} with value: ${highestUnopenedValue}`);
         
         // Step 2: Apply the new rules
         this.cases.forEach(caseObj => {
@@ -530,15 +560,15 @@ export class Scene {
                     if (caseObj === highestUnopenedCase) {
                         // Only the highest unopened case gets doubled
                         caseObj.value = caseObj.value * 2;
-                        console.log(`Case ${caseObj.caseNumber} (highest unopened) value doubled from ${caseObj.originalValue} to ${caseObj.value}`);
+                        //console.log(`Case ${caseObj.caseNumber} (highest unopened) value doubled from ${caseObj.originalValue} to ${caseObj.value}`);
                     } else {
                         // All other high value cases stay the same
-                        console.log(`Case ${caseObj.caseNumber} (other high value) stays at ${caseObj.value}`);
+                        //console.log(`Case ${caseObj.caseNumber} (other high value) stays at ${caseObj.value}`);
                     }
                 } else {
                     // Low and medium value cases (< 50000) get set to 1
                     caseObj.value = 1;
-                    console.log(`Case ${caseObj.caseNumber} value set to 1 (was ${caseObj.originalValue})`);
+                    //console.log(`Case ${caseObj.caseNumber} value set to 1 (was ${caseObj.originalValue})`);
                 }
             }
         });
@@ -716,36 +746,30 @@ export class Scene {
     }
     
     showRevealWindow(value) {
-        // Reset the reveal window for regular cases
-        document.getElementById('caseRevealTitle').textContent = 'CASE VALUE';
-        document.getElementById('caseRevealValue').textContent = value.toLocaleString();
-        document.getElementById('caseRevealClose').textContent = 'CLOSE';
+
+        //console.log("showRevealWindow "+value);
+
+        this.e.suitcase.assignPriceTexture(value);
+
+        // assign the right image to the valuesign mesh
+
+        // Play case button press sound
+        this.e.s.p("openClick");
+
+        this.e.suitcase.show("show");
+
+        this.e.s.p("openClick");
+            
+        if (value <= 500) {
+            this.e.s.p("open_good");
+        } else if (value <= 25000) {
+            this.e.s.p("open_good");
+        } else if (value <= 750000) {
+            this.e.s.p("open_bad");
+        } else if (value === 1000000) {
+            this.e.s.p("open_million");
+        }
         
-        // Reset the close button behavior for regular cases
-        const closeButton = document.getElementById('caseRevealClose');
-        closeButton.onclick = () => {
-            this.hideRevealWindow();
-            this.action = "choose";
-        };
-        
-        const revealWindow = document.getElementById('caseRevealWindow');
-        
-        // Show the window first
-        revealWindow.style.display = 'flex';
-        
-        // Use GSAP for smooth, reliable animation
-        gsap.fromTo(revealWindow, 
-            { 
-                opacity: 0,
-                backdropFilter: 'blur(0px)'
-            },
-            {
-                opacity: 1,
-                backdropFilter: 'blur(10px)',
-                duration: 0.15,
-                ease: "power2.out"
-            }
-        );
     }
     
     hideRevealWindow() {
@@ -759,6 +783,10 @@ export class Scene {
             ease: "power2.in",
             onComplete: () => {
                 revealWindow.style.display = 'none';
+                
+                // Reset action back to "choose" so player can click another case
+                this.action = "choose";
+                //console.log("Reveal window hidden, action reset to 'choose'");
             }
         });
         
@@ -776,7 +804,7 @@ export class Scene {
         if (caseObj && caseObj.bottomPanelCell) {
             caseObj.bottomPanelCell.style.opacity = "0.3";
             caseObj.bottomPanelCell.style.color = "#999";
-            //console.log(`Greyed out cell for case ${caseObj.caseNumber} with value ${caseObj.bottomPanelCell.textContent}`);
+            ////console.log(`Greyed out cell for case ${caseObj.caseNumber} with value ${caseObj.bottomPanelCell.textContent}`);
         }
     }
     
@@ -842,6 +870,9 @@ export class Scene {
     showClueWindow(showNewLabels = false) {
         const clueList = document.getElementById('clueList');
         const noCluesMessage = document.getElementById('noCluesMessage');
+
+        this.e.s.p("click1");
+                this.e.s.p("coin");
         
         // Check if elements exist before proceeding
         if (!clueList || !noCluesMessage) {
@@ -950,8 +981,8 @@ export class Scene {
         const randomIndex = Math.floor(Math.random() * this.availableClues.length);
         const selectedClueType = this.availableClues[randomIndex];
         
-        console.log("selectedClueType", selectedClueType);
-        console.log(`getClue: Available clues before selection: ${this.availableClues.join(', ')}`);
+        //console.log("selectedClueType", selectedClueType);
+        //console.log(`getClue: Available clues before selection: ${this.availableClues.join(', ')}`);
         
         // Call the appropriate function based on the clue type
         let clueText = "";
@@ -987,11 +1018,11 @@ export class Scene {
                 clueText = this.lowClue();
                 break;
             case "doubleClue":
-                console.log("doubleClue");
+                //console.log("doubleClue");
             // Remove doubleClue from available clues BEFORE calling the function
             // to prevent it from being selected again during the double clue process
             this.availableClues.splice(randomIndex, 1);
-            console.log(`Removed doubleClue from available clues. Remaining: ${this.availableClues.length}`);
+            //console.log(`Removed doubleClue from available clues. Remaining: ${this.availableClues.length}`);
                 clueText = this.doubleClue();
                 break;
             default:
@@ -1003,10 +1034,13 @@ export class Scene {
         if (selectedClueType !== "doubleClue") {
             // Remove only the specific instance at the selected index
         this.availableClues.splice(randomIndex, 1);
-            console.log(`Removed clue instance "${selectedClueType}" at index ${randomIndex}. Remaining: ${this.availableClues.length}`);
+            //console.log(`Removed clue instance "${selectedClueType}" at index ${randomIndex}. Remaining: ${this.availableClues.length}`);
             
         if(addIt===true){
             this.cluesFound.push(clueText);
+            
+            // Play clue sound when clue is actually received
+            
             }
         }
         
@@ -1017,7 +1051,7 @@ export class Scene {
     giveFreeClue() {
         // Check if free clue has already been used
         if (this.freeClueUsed) {
-            console.log("Free clue already used, ignoring request");
+            //console.log("Free clue already used, ignoring request");
             return;
         }
         
@@ -1163,8 +1197,13 @@ export class Scene {
             // Get a random clue
             const clueText = this.getClue(true);
             
-            // Show popup near magnifying glass
-            this.showFreeCluePopup(clueText);
+            // Show the clue menu instead of just a popup with a 2 second delay
+            setTimeout(() => {
+                this.showClueWindow(true);
+            }, 2000);
+            
+            // Play clue sound
+            this.e.s.p("clue");
         } else {
             // No clues available for initial free clue
             this.showFreeCluePopup("No more clues");
@@ -1201,10 +1240,10 @@ export class Scene {
             }
         });
 
-        console.log(`Upper Left Quadrant: ${upperLeftLowCount} low cases`);
-        console.log(`Upper Right Quadrant: ${upperRightLowCount} low cases`);
-        console.log(`Lower Left Quadrant: ${lowerLeftLowCount} low cases`);
-        console.log(`Lower Right Quadrant: ${lowerRightLowCount} low cases`);
+        //console.log(`Upper Left Quadrant: ${upperLeftLowCount} low cases`);
+        //console.log(`Upper Right Quadrant: ${upperRightLowCount} low cases`);
+        //console.log(`Lower Left Quadrant: ${lowerLeftLowCount} low cases`);
+        //console.log(`Lower Right Quadrant: ${lowerRightLowCount} low cases`);
 
         // Find the quadrant with the most low cases
         const quadrantCounts = [
@@ -1251,8 +1290,8 @@ export class Scene {
             }
         });
 
-        console.log(`Odd numbered cases: ${oddLowCount} low cases`);
-        console.log(`Even numbered cases: ${evenLowCount} low cases`);
+        //console.log(`Odd numbered cases: ${oddLowCount} low cases`);
+        //console.log(`Even numbered cases: ${evenLowCount} low cases`);
 
         // Determine which has more low numbers
         if (oddLowCount > evenLowCount) {
@@ -1292,10 +1331,10 @@ export class Scene {
             }
         });
 
-        console.log(`Column 1: ${column1LowCount} low cases`);
-        console.log(`Column 2: ${column2LowCount} low cases`);
-        console.log(`Column 3: ${column3LowCount} low cases`);
-        console.log(`Column 4: ${column4LowCount} low cases`);
+        //console.log(`Column 1: ${column1LowCount} low cases`);
+        //console.log(`Column 2: ${column2LowCount} low cases`);
+        //console.log(`Column 3: ${column3LowCount} low cases`);
+        //console.log(`Column 4: ${column4LowCount} low cases`);
 
         // Find the column with the most low cases
         const columnCounts = [
@@ -1367,7 +1406,7 @@ export class Scene {
         // Pick a random row from those that have high value cases
         const randomRow = rowsWithHighValues[Math.floor(Math.random() * rowsWithHighValues.length)];
         
-        console.log(`Row ${randomRow.rowNumber} has ${randomRow.highValueCount} high value cases`);
+        //console.log(`Row ${randomRow.rowNumber} has ${randomRow.highValueCount} high value cases`);
 
         return `Row ${randomRow.rowNumber} has ${randomRow.highValueCount} <span style="color: red; font-weight: bold;">HIGH </span>value case${randomRow.highValueCount === 1 ? '' : 's'}.`;
     }
@@ -1392,7 +1431,7 @@ export class Scene {
         // Sort by case number for consistent output
         selectedCases.sort((a, b) => a.caseNumber - b.caseNumber);
 
-        console.log(`Medium value cases found: ${selectedCases.map(c => `${c.caseNumber}(${c.value})`).join(', ')}.`);
+        //console.log(`Medium value cases found: ${selectedCases.map(c => `${c.caseNumber}(${c.value})`).join(', ')}.`);
 
         return `Case ${selectedCases[0].caseNumber}, ${selectedCases[1].caseNumber}, and ${selectedCases[2].caseNumber} are <span style="color: blue; font-weight: bold;">MEDIUM </span>value.`;
     }
@@ -1418,8 +1457,8 @@ export class Scene {
             }
         });
 
-        console.log(`Top Half: ${topHalfLowCount} low cases (< 500)`);
-        console.log(`Bottom Half: ${bottomHalfLowCount} low cases (< 500)`);
+        //console.log(`Top Half: ${topHalfLowCount} low cases (< 500)`);
+        //console.log(`Bottom Half: ${bottomHalfLowCount} low cases (< 500)`);
 
         // Determine which half has more low cases
         if (topHalfLowCount > bottomHalfLowCount) {
@@ -1452,8 +1491,8 @@ export class Scene {
             }
         });
 
-        console.log(`Left Half: ${leftHalfLowCount} low cases (< 500)`);
-        console.log(`Right Half: ${rightHalfLowCount} low cases (< 500)`);
+        //console.log(`Left Half: ${leftHalfLowCount} low cases (< 500)`);
+        //console.log(`Right Half: ${rightHalfLowCount} low cases (< 500)`);
 
         // Determine which half has more low cases
         if (leftHalfLowCount > rightHalfLowCount) {
@@ -1499,8 +1538,8 @@ export class Scene {
         const allSelectedCases = [...selectedLowCases, selectedHighCase];
         allSelectedCases.sort((a, b) => a.caseNumber - b.caseNumber);
 
-        console.log(`Pick3 Low/High: Low cases ${selectedLowCases.map(c => `${c.caseNumber}(${c.value})`).join(', ')}, High case ${selectedHighCase.caseNumber}(${selectedHighCase.value})`);
-        console.log(`Ordered by case number: ${allSelectedCases.map(c => c.caseNumber).join(', ')}`);
+        //console.log(`Pick3 Low/High: Low cases ${selectedLowCases.map(c => `${c.caseNumber}(${c.value})`).join(', ')}, High case ${selectedHighCase.caseNumber}(${selectedHighCase.value})`);
+        //console.log(`Ordered by case number: ${allSelectedCases.map(c => c.caseNumber).join(', ')}`);
 
         return `Case ${allSelectedCases[0].caseNumber}, ${allSelectedCases[1].caseNumber}, and ${allSelectedCases[2].caseNumber} contain two <span style="color: green; font-weight: bold;">LOW </span>numbers and one <span style="color: red; font-weight: bold;">HIGH </span>number.`;
     }
@@ -1542,7 +1581,7 @@ export class Scene {
             }
             
             if (foundCase) {
-                console.log(`NextTo: Case ${randomCaseNum} has ${highValueCount} HIGH value cases adjacent to it (all cases used).`);
+                //console.log(`NextTo: Case ${randomCaseNum} has ${highValueCount} HIGH value cases adjacent to it (all cases used).`);
                 return this.formatHighValueCount(highValueCount, randomCaseNum);
             } else {
                 return "No cases found with adjacent HIGH value cases.";
@@ -1571,7 +1610,7 @@ export class Scene {
             // Mark this case number as used
             this.usedNextToNumbers.add(randomCaseNum);
             
-            console.log(`NextTo: Case ${randomCaseNum} has ${highValueCount} HIGH value cases adjacent to it.`);
+            //console.log(`NextTo: Case ${randomCaseNum} has ${highValueCount} HIGH value cases adjacent to it.`);
             
             return this.formatHighValueCount(highValueCount, randomCaseNum);
         } else {
@@ -1613,7 +1652,7 @@ export class Scene {
         if (availableAdjacentCases.length === 0) {
             // If all adjacent cases have been used, pick any adjacent case
         const randomAdjacentCase = adjacentCases[Math.floor(Math.random() * adjacentCases.length)];
-            console.log(`NextTo: High case ${currentCase} (value: ${randomHighCase.value}) has adjacent case ${randomAdjacentCase} (all adjacent cases used).`);
+            //console.log(`NextTo: High case ${currentCase} (value: ${randomHighCase.value}) has adjacent case ${randomAdjacentCase} (all adjacent cases used).`);
             return `There is a HIGH number next to the number ${randomAdjacentCase}.`;
         }
         
@@ -1623,7 +1662,7 @@ export class Scene {
         // Mark this number as used
         this.usedNextToNumbers.add(randomAdjacentCase);
         
-        console.log(`NextTo: High case ${currentCase} (value: ${randomHighCase.value}) has adjacent case ${randomAdjacentCase}.`);
+        //console.log(`NextTo: High case ${currentCase} (value: ${randomHighCase.value}) has adjacent case ${randomAdjacentCase}.`);
 
         return `There is a HIGH number next to the number ${randomAdjacentCase}.`;
     }
@@ -1655,7 +1694,7 @@ export class Scene {
         // Pick a random clue case
         const randomClueCase = clueCases[Math.floor(Math.random() * clueCases.length)];
 
-        console.log(`LowClue: Low case ${randomLowCase.caseNumber} (value: ${randomLowCase.value}), Clue case ${randomClueCase.caseNumber}`);
+        //console.log(`LowClue: Low case ${randomLowCase.caseNumber} (value: ${randomLowCase.value}), Clue case ${randomClueCase.caseNumber}`);
 
         return `Box ${randomLowCase.caseNumber} and ${randomClueCase.caseNumber} have a <span style="color: green; font-weight: bold;">LOW </span>number and a CLUE.`;
     }
@@ -1699,7 +1738,7 @@ export class Scene {
     }
     
     doubleClue() {
-        console.log(`DoubleClue: Function called. Available clues at start: ${this.availableClues.join(', ')}`);
+        //console.log(`DoubleClue: Function called. Available clues at start: ${this.availableClues.join(', ')}`);
         
         // Create a string called doubleClueString
         // Start it by saying DOUBLE CLUE! then br br
@@ -1712,19 +1751,19 @@ export class Scene {
         // Check if we have at least 2 clues available (excluding the current "doubleClue")
         const availableCluesForDouble = this.availableClues.filter(clueType => clueType !== "doubleClue");
         
-        console.log(`DoubleClue: Available clues for double clue (excluding doubleClue): ${availableCluesForDouble.join(', ')}`);
-        console.log(`DoubleClue: Total available clues: ${this.availableClues.join(', ')}`);
+        //console.log(`DoubleClue: Available clues for double clue (excluding doubleClue): ${availableCluesForDouble.join(', ')}`);
+        //console.log(`DoubleClue: Total available clues: ${this.availableClues.join(', ')}`);
         
         if (availableCluesForDouble.length < 2) {
             return "DOUBLE CLUE!<br><br>Not enough clues available for double clue.";
         }
         
         // Get the first clue using the generic function without adding to array
-        console.log(`DoubleClue: Getting first clue...`);
+        //console.log(`DoubleClue: Getting first clue...`);
         const firstClueText = this.getClue(false);
         
         // Get the second clue using the generic function without adding to array
-        console.log(`DoubleClue: Getting second clue...`);
+        //console.log(`DoubleClue: Getting second clue...`);
         const secondClueText = this.getClue(false);
         
         // Add both clues to the cluesFound array manually
@@ -1734,10 +1773,10 @@ export class Scene {
         // Build the final double clue string
         doubleClueString += firstClueText + "<br><br>" + secondClueText;
         
-        console.log(`DoubleClue: Generated two clues using getClueWithoutAdding() function`);
-        console.log(`First clue: ${firstClueText}`);
-        console.log(`Second clue: ${secondClueText}`);
-        console.log(`DoubleClue: Available clues after double clue: ${this.availableClues.length}`);
+        //console.log(`DoubleClue: Generated two clues using getClueWithoutAdding() function`);
+        //console.log(`First clue: ${firstClueText}`);
+        //console.log(`Second clue: ${secondClueText}`);
+        //console.log(`DoubleClue: Available clues after double clue: ${this.availableClues.length}`);
 
         this.cluesFound.push(doubleClueString);
         
@@ -1801,6 +1840,13 @@ export class Scene {
             
             // Show a fancy deal acceptance popup
             this.showDealAcceptancePopup(dealValue);
+            
+            // Play game end sound based on final amount
+            if (dealValue < 100000) {
+                this.e.s.p("lose");
+            } else {
+                this.e.s.p("wincase");
+            }
             
             // Disable the deal button after use (but keep it visible)
             const dealButton = document.getElementById('caseValueDiv');
@@ -2081,6 +2127,7 @@ export class Scene {
         // Add click functionality
         examineButton.addEventListener('click', () => {
             this.fadeOutDealOverlay(overlay);
+            this.e.s.p("click1");
         });
     }
     
@@ -2096,7 +2143,7 @@ export class Scene {
                 // Ensure the overlay is completely removed
                 if (overlay.parentNode) {
                     overlay.parentNode.removeChild(overlay);
-                    console.log("Deal overlay completely removed from DOM");
+                    //console.log("Deal overlay completely removed from DOM");
                 }
                 
                 // Force a small delay to ensure DOM cleanup, then enable clue button
@@ -2111,11 +2158,11 @@ export class Scene {
                             
                             // Add a simple click handler that will definitely work
                             clueButton.onclick = () => {
-                                console.log("CLUE BUTTON CLICKED AFTER GAME END!");
+                                //console.log("CLUE BUTTON CLICKED AFTER GAME END!");
                                 this.showClueWindow(false);
                             };
                             
-                            console.log("Clue button SIMPLY enabled with direct click handler");
+                            //console.log("Clue button SIMPLY enabled with direct click handler");
                         }
                     }
                 }, 100);
@@ -2239,7 +2286,7 @@ export class Scene {
     
     startPickThree() {
         // Initialize pick 3 mode
-        console.log("startPickThree called - marking PICK 3 button as used");
+        //console.log("startPickThree called - marking PICK 3 button as used");
         this.pickThreeMode = true;
         this.pickedCases = [];
         this.originalAction = this.action;
@@ -2251,7 +2298,7 @@ export class Scene {
         // Disable other action buttons during pick 3 mode
         this.disableActionButtons([0, 1, 2]); // Disable FREE CLUE, PICK 3, and DOUBLE buttons
         
-        console.log("After marking PICK 3 as used and disabling all buttons:");
+        //console.log("After marking PICK 3 as used and disabling all buttons:");
         this.logButtonUsageStates();
         this.logActionButtonStates();
         
@@ -2341,7 +2388,7 @@ export class Scene {
         
         // Add clue to found clues
         this.cluesFound.push(clueText);
-        console.log("New pick 3 clue added:", clueText);
+        //console.log("New pick 3 clue added:", clueText);
         
         // Remove temporary styling from picked cases
         this.pickedCases.forEach(caseObj => {
@@ -2430,7 +2477,7 @@ export class Scene {
     
     enableActionButtonsRespectingUsage(buttonIndices) {
         // Re-enable action buttons based on their usage state
-        console.log(`enableActionButtonsRespectingUsage called with indices: [${buttonIndices}]`);
+        //console.log(`enableActionButtonsRespectingUsage called with indices: [${buttonIndices}]`);
         this.logButtonUsageStates();
         this.logActionButtonStates();
         
@@ -2441,15 +2488,15 @@ export class Scene {
                 
                 if (index === 0 && !this.isButtonUsed('freeClue')) {
                     shouldEnable = true;
-                    console.log("FREE CLUE button re-enabled (not used yet)");
+                    //console.log("FREE CLUE button re-enabled (not used yet)");
                 } else if (index === 1 && !this.isButtonUsed('pick3')) {
                     shouldEnable = true;
-                    console.log("PICK 3 button re-enabled (not used yet)");
+                    //console.log("PICK 3 button re-enabled (not used yet)");
                 } else if (index === 2 && !this.isButtonUsed('double')) {
                     shouldEnable = true;
-                    console.log("DOUBLE button re-enabled (not used yet)");
+                    //console.log("DOUBLE button re-enabled (not used yet)");
                 } else {
-                    console.log(`Action button ${index} stays disabled (already used)`);
+                    //console.log(`Action button ${index} stays disabled (already used)`);
                 }
                 
                 if (shouldEnable) {
@@ -2459,7 +2506,7 @@ export class Scene {
             }
         });
         
-        console.log("After re-enabling, button states:");
+        //console.log("After re-enabling, button states:");
         this.logActionButtonStates();
     }
     
@@ -2555,6 +2602,18 @@ export class Scene {
             const timeString = this.formatTime(this.gameTime);
             timerDiv.textContent = timeString;
             
+            // Play ticking sound when less than 15 seconds left
+            if (this.gameTime <= 15 && this.gameTime > 0) {
+                const currentWholeSecond = Math.floor(this.gameTime);
+                
+                // Only play tick sound if we haven't played it for this second yet
+                if (!this.lastTickSecond || this.lastTickSecond !== currentWholeSecond) {
+                    this.e.s.p("tick");
+                    this.lastTickSecond = currentWholeSecond;
+                    //console.log(`🎵 Tick sound played at ${currentWholeSecond} seconds`);
+                }
+            }
+            
             // Update every frame
             requestAnimationFrame(() => this.updateTimerDisplay());
         }
@@ -2581,11 +2640,11 @@ export class Scene {
         const clueButton = document.getElementById('clueButton');
         if (clueButton) {
             if (this.gameEnded) {
-                console.log("Game has ended, NEVER disabling clue button");
+                //console.log("Game has ended, NEVER disabling clue button");
                 clueButton.disabled = false;
                 clueButton.style.cursor = "pointer";
             } else {
-                console.log("disable clue button");
+                //console.log("disable clue button");
                 clueButton.disabled = true;
                 clueButton.style.cursor = "not-allowed";
             }
@@ -2603,7 +2662,7 @@ export class Scene {
     
     enableAllButtonsForGame() {
 
-        console.log("enableAllButtonsForGame");
+        //console.log("enableAllButtonsForGame");
         this.logButtonUsageStates(); // Debug: show current button states
 
         // Re-enable action buttons based on their usage state
@@ -2613,20 +2672,20 @@ export class Scene {
                 // First action button (FREE CLUE) - only enable if not used
                 button.disabled = false;
                 button.style.cursor = "pointer";
-                console.log("FREE CLUE button enabled (not used yet)");
+                //console.log("FREE CLUE button enabled (not used yet)");
             } else if (index === 1 && !this.isButtonUsed('pick3')) {
                 // Second action button (PICK 3) - only enable if not used
                 button.disabled = false;
                 button.style.cursor = "pointer";
-                console.log("PICK 3 button enabled (not used yet)");
+                //console.log("PICK 3 button enabled (not used yet)");
             } else if (index === 2 && !this.isButtonUsed('double')) {
                 // Third action button (DOUBLE) - only enable if not used
                 button.disabled = false;
                 button.style.cursor = "pointer";
-                console.log("DOUBLE button enabled (not used yet)");
+                //console.log("DOUBLE button enabled (not used yet)");
             } else {
                 // Button has been used, it stays disabled
-                console.log(`Action button ${index} stays disabled (already used)`);
+                //console.log(`Action button ${index} stays disabled (already used)`);
             }
         });
         
@@ -2645,15 +2704,15 @@ export class Scene {
                 // If game has ended, always enable clue button for review
                 clueButton.disabled = false;
                 clueButton.style.cursor = "pointer";
-                console.log("Game ended, clue button enabled for review");
+                //console.log("Game ended, clue button enabled for review");
             } else if (!this.isButtonUsed('clueButton')) {
                 // During game, only enable if not used yet
                 clueButton.disabled = false;
                 clueButton.style.cursor = "pointer";
-                console.log("re-enable clue button (not used yet)");
+                //console.log("re-enable clue button (not used yet)");
             } else {
                 // During game, keep disabled if already used
-                console.log("clue button stays disabled (already used)");
+                //console.log("clue button stays disabled (already used)");
             }
         }
         
@@ -2673,7 +2732,7 @@ export class Scene {
         // Check if exactly 7 cases are opened
         const openedCases = this.cases.filter(caseObj => caseObj.action === "opened").length;
         
-        console.log(`Checking first action button: ${openedCases} cases opened`);
+        //console.log(`Checking first action button: ${openedCases} cases opened`);
         
         if (openedCases === 7) {
             // Get the first action button
@@ -2818,10 +2877,10 @@ export class Scene {
         // Animate each case in with staggered timing
         this.cases.forEach((caseObj, index) => {
             const button = caseObj.domRef;
-            const delay = index * 0.01; // Stagger each case by 80ms
+            const delay = index * 0.02; // Stagger each case by 5ms (faster)
             
             tl.to(button, {
-                duration: .5,
+                duration: 0.5, // Faster case animation
                 x: 0,
                 y: 0,
                 rotation: 0,
@@ -2844,6 +2903,7 @@ export class Scene {
             const closeButton = document.getElementById('closeInstructionsButton');
             if (closeButton) {
                 closeButton.addEventListener('click', () => {
+                    this.e.s.p("click1");
                     this.hideInstructionsWindow();
                 });
             }
@@ -2851,6 +2911,7 @@ export class Scene {
             // Add click listener to overlay background to close
             instructionsOverlay.addEventListener('click', (e) => {
                 if (e.target === instructionsOverlay) {
+                    this.e.s.p("click1");
                     this.hideInstructionsWindow();
                 }
             });
@@ -2949,7 +3010,7 @@ export class Scene {
         // Mark a specific button as used
         if (this.buttonUsageStates.hasOwnProperty(buttonType)) {
             this.buttonUsageStates[buttonType] = true;
-            console.log(`Button ${buttonType} marked as used`);
+            //console.log(`Button ${buttonType} marked as used`);
         }
     }
     
@@ -2963,12 +3024,12 @@ export class Scene {
         Object.keys(this.buttonUsageStates).forEach(key => {
             this.buttonUsageStates[key] = false;
         });
-        console.log("All button usage states reset");
+        //console.log("All button usage states reset");
     }
     
     logButtonUsageStates() {
         // Debug method to show current button usage states
-        console.log("Current button usage states:", this.buttonUsageStates);
+        //console.log("Current button usage states:", this.buttonUsageStates);
     }
     
     logActionButtonStates() {
@@ -2976,7 +3037,7 @@ export class Scene {
         const actionButtons = document.querySelectorAll('.action-button');
         actionButtons.forEach((button, index) => {
             const buttonNames = ['FREE CLUE', 'PICK 3', 'DOUBLE'];
-            console.log(`Action button ${index} (${buttonNames[index]}): disabled=${button.disabled}, cursor=${button.style.cursor}`);
+            //console.log(`Action button ${index} (${buttonNames[index]}): disabled=${button.disabled}, cursor=${button.style.cursor}`);
         });
     }
     
@@ -2984,55 +3045,57 @@ export class Scene {
         // Test method to check clue button state
         const clueButton = document.getElementById('clueButton');
         if (clueButton) {
-            console.log("=== CLUE BUTTON TEST ===");
-            console.log("Element found:", clueButton);
-            console.log("Tag name:", clueButton.tagName);
-            console.log("ID:", clueButton.id);
-            console.log("Classes:", clueButton.className);
-            console.log("Disabled:", clueButton.disabled);
-            console.log("Style disabled:", clueButton.style.disabled);
-            console.log("Cursor:", clueButton.style.cursor);
-            console.log("Pointer events:", clueButton.style.pointerEvents);
-            console.log("Z-index:", clueButton.style.zIndex);
-            console.log("Position:", clueButton.style.position);
-            console.log("Display:", clueButton.style.display);
-            console.log("Visibility:", clueButton.style.visibility);
-            console.log("Opacity:", clueButton.style.opacity);
-            console.log("Click handlers:", clueButton.onclick);
-            console.log("Parent:", clueButton.parentElement);
-            console.log("Parent disabled:", clueButton.parentElement?.disabled);
-            console.log("Parent pointer events:", clueButton.parentElement?.style.pointerEvents);
+            //console.log("=== CLUE BUTTON TEST ===");
+            //console.log("Element found:", clueButton);
+            //console.log("Tag name:", clueButton.tagName);
+            //console.log("ID:", clueButton.id);
+            //console.log("Classes:", clueButton.className);
+            //console.log("Disabled:", clueButton.disabled);
+            //console.log("Style disabled:", clueButton.style.disabled);
+            //console.log("Cursor:", clueButton.style.cursor);
+            //console.log("Pointer events:", clueButton.style.pointerEvents);
+            //console.log("Z-index:", clueButton.style.zIndex);
+            //console.log("Position:", clueButton.style.position);
+            //console.log("Display:", clueButton.style.display);
+            //console.log("Visibility:", clueButton.style.visibility);
+            //console.log("Opacity:", clueButton.style.opacity);
+            //console.log("Click handlers:", clueButton.onclick);
+            //console.log("Parent:", clueButton.parentElement);
+            //console.log("Parent disabled:", clueButton.parentElement?.disabled);
+            //console.log("Parent pointer events:", clueButton.parentElement?.style.pointerEvents);
             
             // Check for event listeners
-            console.log("Event listeners:", clueButton._listeners || "None");
-            console.log("addEventListener exists:", typeof clueButton.addEventListener);
+            //console.log("Event listeners:", clueButton._listeners || "None");
+            //console.log("addEventListener exists:", typeof clueButton.addEventListener);
             
             // Try to manually trigger a click
             try {
                 clueButton.click();
-                console.log("Manual click() called successfully");
+                //console.log("Manual click() called successfully");
             } catch (e) {
-                console.error("Error calling click():", e);
+                //console.error("Error calling click():", e);
             }
             
             // Try to add a simple test listener
             try {
-                clueButton.addEventListener('test', () => console.log("Test listener works"));
+                clueButton.addEventListener('test', () => {
+                    //console.log("Test listener works");
+                });
                 clueButton.dispatchEvent(new Event('test'));
-                console.log("Test event dispatched successfully");
+                //console.log("Test event dispatched successfully");
             } catch (e) {
-                console.error("Error with test event:", e);
+                //console.error("Error with test event:", e);
             }
             
-            console.log("=========================");
+            //console.log("=========================");
         } else {
-            console.error("Clue button element not found!");
+            //console.error("Clue button element not found!");
         }
     }
     
     enableClueButtonForEndGame() {
         
-        console.log("enableClueButtonForEndGame called");
+        //console.log("enableClueButtonForEndGame called");
         // Enable the clue button specifically when the game ends
         const clueButton = document.getElementById('clueButton');
         if (clueButton) {
@@ -3041,40 +3104,40 @@ export class Scene {
             clueButton.style.cursor = "pointer";
             clueButton.style.pointerEvents = "auto";
             
-            console.log("=== CLUE BUTTON DEBUG ===");
-            console.log("Clue button element:", clueButton);
-            console.log("Disabled:", clueButton.disabled);
-            console.log("Cursor:", clueButton.style.cursor);
-            console.log("Pointer events:", clueButton.style.pointerEvents);
-            console.log("Z-index:", clueButton.style.zIndex);
-            console.log("Position:", clueButton.style.position);
-            console.log("Display:", clueButton.style.display);
-            console.log("Visibility:", clueButton.style.visibility);
-            console.log("Opacity:", clueButton.style.opacity);
-            console.log("Click handlers:", clueButton.onclick);
-            console.log("Event listeners:", clueButton._listeners || "None");
-            console.log("=========================");
+            //console.log("=== CLUE BUTTON DEBUG ===");
+            //console.log("Clue button element:", clueButton);
+            //console.log("Disabled:", clueButton.disabled);
+            //console.log("Cursor:", clueButton.style.cursor);
+            //console.log("Pointer events:", clueButton.style.pointerEvents);
+            //console.log("Z-index:", clueButton.style.zIndex);
+            //console.log("Position:", clueButton.style.position);
+            //console.log("Display:", clueButton.style.display);
+            //console.log("Visibility:", clueButton.style.visibility);
+            //console.log("Opacity:", clueButton.style.opacity);
+            //console.log("Click handlers:", clueButton.onclick);
+            //console.log("Event listeners:", clueButton._listeners || "None");
+            //console.log("=========================");
             
             // Test if it's actually clickable by adding a test click
             clueButton.onclick = function(e) {
-                console.log("CLUE BUTTON CLICKED!", e);
-                alert("Clue button is working!");
+                //console.log("CLUE BUTTON CLICKED!", e);
+                // alert("Clue button is working!");
             };
             
             // Also try adding a direct event listener
             try {
                 clueButton.addEventListener('click', function(e) {
-                    console.log("CLUE BUTTON CLICKED VIA ADD EVENT LISTENER!", e);
-                    alert("Clue button addEventListener works!");
+                    //console.log("CLUE BUTTON CLICKED VIA ADD EVENT LISTENER!", e);
+                    // alert("Clue button addEventListener works!");
                 });
-                console.log("Added click event listener successfully");
+                //console.log("Added click event listener successfully");
             } catch (e) {
-                console.error("Failed to add event listener:", e);
+                //console.error("Failed to add event listener:", e);
             }
             
-            console.log("Clue button enabled for end game with test click handler");
+            //console.log("Clue button enabled for end game with test click handler");
         } else {
-            console.error("Clue button element not found!");
+            //console.error("Clue button element not found!");
         }
     }
     
