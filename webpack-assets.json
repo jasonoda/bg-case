@@ -1,8 +1,9 @@
 {
   "index": {
-    "js": "index-bundle-bd21d5eaa411f9a9dde5.js"
+    "js": "index-bundle-701177caae7984ed4666.js"
   },
   "": {
+    "js": "807-bundle-701177caae7984ed4666.js",
     "glb": [
       "src/models/suitcase.glb",
       "src/models/untitled.glb"
@@ -169,11 +170,8 @@
       "src/images/cards/1B.svg",
       "src/images/cards/2B.svg"
     ],
-    "html": [
-      "game.html",
-      "index.html"
-    ],
     "ttf": "661aebe2b21204b02d9e.ttf",
+    "html": "game.html",
     "css": "edb23d6982e7f80d060d.css",
     "ini": "src/sounds/desktop.ini"
   }

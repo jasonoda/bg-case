@@ -197,8 +197,8 @@ export class Scene {
                 //console.error('Clue button element not found during setup!');
             }
             
-            // Add click listener to clue window close button
-            document.getElementById('clueClose').addEventListener('click', () => {
+            // Add click listener to entire clue window for click anywhere to continue
+            document.getElementById('clueWindow').addEventListener('click', () => {
                 this.hideClueWindow();  
                 this.e.s.p("click1");
             });

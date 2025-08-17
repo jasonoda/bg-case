@@ -105,7 +105,7 @@
             <div id="noCluesMessage">No clues yet. Use the free clue button or open cases to find more clues.</div>
             <div id="clueList">
             </div>
-            <div id="clueClose">CLOSE</div>
+            <div id="clueClose">CLICK TO CONTINUE</div>
         </div>
     </div>
 
@@ -230,33 +230,41 @@
             <div id="instructionsTitle">INSTRUCTIONS</div>
             
             <div id="instructionsText">
-                <div class="instructionLine"><b>SCORING:</b></div>
-                <div class="instructionLine">3 jewels = 100 points<br>4 jewels = 150 points<br>5 jewels = 200 points</div>
+                <div class="instructionLine">Open cases to eliminate them.</div>
+                <div class="instructionDivider"></div>
+                
+                <div class="instructionLine">Use clues to figure out<br>which ones to pick.</div>
+                <div class="instructionDivider"></div>
+                
+                <div class="instructionLine">Press the TAKE DEAL button, when you think you can't score any higher.</div>
+                <div class="instructionDivider"></div>
+                
+                <div class="instructionLine">Time limit: 2 minutes</div>
                 
                 <div class="instructionDivider"></div>
                 
-                <div class="instructionLine"><b>BONUS BOXES:</b></div>
+                <div class="instructionLine helperButtonsHeader"><b>HELPER BUTTONS:</b></div>
                 
-                <div class="bonusItem">
-                    <img src="src/images/jewel_w.png" alt="White Bonus Box" class="bonusImage">
-                    <div class="bonusDescription">
-                        Match 5 in a row.<br>Clears jewels of a single color.
+                <div class="helperButtonItem">
+                    <div class="helperButtonIcon">GET CLUE</div>
+                    <div class="helperButtonDescription">
+                        Get a free clue once you've opened 7 cases
                     </div>
                 </div>
                 
-                <div class="bonusItem">
-                    <img src="src/images/jewel_l.png" alt="Grey Bonus Box" class="bonusImage">
-                    <div class="bonusDescription">
-                        Make an L or T shape match.<br>Creates an explosion.
+                <div class="helperButtonItem">
+                    <div class="helperButtonIcon">PICK 3</div>
+                    <div class="helperButtonDescription">
+                        Pick 3 cases, the lowest value will be revealed
                     </div>
                 </div>
                 
-                <div class="instructionDivider"></div>
-                <div class="instructionLine">2:00 time limit.</div>
-                <div class="instructionDivider"></div>
-                <div class="instructionLine">Match sets to score points.</div>
-                <div class="instructionDivider"></div>
-                <div class="instructionLine">Match faster to raise your score multiplier.</div>
+                <div class="helperButtonItem">
+                    <div class="helperButtonIcon">DOUBLE</div>
+                    <div class="helperButtonDescription">
+                        Double the value of your highest available case. All low and medium cases become worth 1
+                    </div>
+                </div>
             </div>
             
             <div id="closeInstructionsButton">CLOSE</div>
