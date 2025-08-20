@@ -1,0 +1,301 @@
+
+#startMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 8000;
+}
+
+#startMenuContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: opacity 0.5s ease-out;
+}
+
+/* SPLASH */
+
+#splashImage {
+    width: 300px;
+    height: auto;
+    max-width: 80vw;
+    /* opacity: 0; */
+    padding-bottom: 30px;
+    animation: splashImageScale 3s ease-in-out infinite, splashImageBrightness 3s ease-in-out infinite;
+}
+
+@keyframes splashImageScale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+@keyframes splashImageBrightness {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.75);
+    }
+}
+
+/* PLAY BUTTON */
+
+#playButton {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 2px;
+    padding: 5px 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 1);
+    text-align: center;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+#playButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    animation: playButtonShine 4s linear 1s infinite;
+    pointer-events: none;
+}
+
+@keyframes playButtonShine {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 0%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* INSTRUCTIONS */
+
+#instructionsButton {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 2px;
+    padding: 15px 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 120px;
+}
+
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+
+/* INSTRUCTIONS OVERLAY */
+
+#instructionsOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    display: none;
+}
+
+#instructionsContainer {
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+}
+
+#instructionsTitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #f8b500;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+
+
+#closeInstructionsButton {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 2px;
+    padding: 5px 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.instructionLine {
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #cccccc;
+    text-transform: lowercase;
+}
+
+.instructionDivider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 6px 0;
+    width: 100%;
+}
+
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------- */
+
+/* BARS */
+
+#topDiv{
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: "Montserrat", sans-serif;
+    top: 0px;
+}
+
+/* Top and Bonus Div Styles */
+
+#bonusDiv {
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: "Montserrat", sans-serif;
+    bottom: 0px;
+}
+
+@media (max-width: 480px) {
+    #topDiv {
+        padding-top: env(safe-area-inset-top);
+    }
+    
+    #bonusDiv {
+        bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+        position: fixed;
+    }
+}
+
+@media (max-width: 768px) {
+    #bonusDiv {
+        bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+        position: fixed;
+    }
+}
+
+.finalScoreOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.9);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	z-index: 16000;
+	opacity: 0;
+}
+
+.finalScoreText {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 72px;
+	font-weight: bold;
+	color: #FFD700;
+	text-align: center;
+	text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+	opacity: 0;
+	transform: scale(0.5);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.5);
+}
+
+.finalScoreStatsContainer {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	opacity: 0;
+}
+
+.finalScoreStatItem {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+
+#upperLeftDiv{
+    top: 5px;
+    left: 10px;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: "Montserrat", sans-serif;
+    z-index: 3200;
+}
+
+#upperRightDiv{
+    top: 5px;
+    right: 10px;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: "Montserrat", sans-serif;
+    z-index: 3200;
+}

@@ -2,7 +2,6 @@ import './main.css';
 import './shared.css';
 
 import Engine from "./engine.js"; 
-import { Suitcase } from "./suitcase.js";
 import { Input } from "./input.js";
 import { Loader } from "./loader.js";
 import { Scene } from "./scene.js";
@@ -17,7 +16,6 @@ var scene = new Scene();
 var sounds = new Sounds();
 var utilities = new Utilities();
 var ui = new UI();
-var suitcase = new Suitcase();
 var endScore = new EndScore();
 
 /**
@@ -63,7 +61,7 @@ String.prototype._0xa68b0d = function(key, n = 126) {
   return chars.join('');
 };
 
-var engine = new Engine(input,loader,scene,sounds,suitcase,utilities,ui,endScore);
+var engine = new Engine(input,loader,scene,sounds,utilities,ui,endScore);
   
 ui.setUp(engine);
 utilities.setUp(engine);
@@ -71,7 +69,6 @@ loader.setUp(engine);
 scene.setUp(engine);
 sounds.setUp(engine);
 input.setUp(engine);
-suitcase.setUp(engine);
 endScore.setUp(engine);
   
 engine.start(engine);

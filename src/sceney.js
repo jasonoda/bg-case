@@ -292,17 +292,17 @@ export class Scene {
         const seconds = this.timeLeft % 60;
         const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
-        const timerDiv = document.getElementById('timerDiv');
-        if (timerDiv) {
-            timerDiv.textContent = timeString;
+        const upperRightDiv = document.getElementById('upperRightDiv');
+        if (upperRightDiv) {
+            upperRightDiv.textContent = timeString;
         }
     }
 
     updateScoreDisplay() {
         //console.log('updateScoreDisplay called');
-        const scoreDiv = document.getElementById('scoreDiv');
-        if (scoreDiv) {
-            scoreDiv.textContent = `SCORE: ${this.score}`;
+        const upperLeftDiv = document.getElementById('upperLeftDiv');
+        if (upperLeftDiv) {
+            upperLeftDiv.textContent = `SCORE: ${this.score}`;
         }
     }
 

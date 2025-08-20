@@ -1,9 +1,8 @@
 {
   "index": {
-    "js": "index-bundle-701177caae7984ed4666.js"
+    "js": "index-bundle-b31dcbf6e5fe01a82d67.js"
   },
   "": {
-    "js": "807-bundle-701177caae7984ed4666.js",
     "glb": [
       "src/models/suitcase.glb",
       "src/models/untitled.glb"
@@ -73,6 +72,7 @@
     "png": [
       "src/images/case.png",
       "src/images/back.png",
+      "src/images/splashImage.png",
       "src/images/ref/pos-x.png",
       "src/images/ref/pos-z.png",
       "src/images/ref/neg-z.png",
@@ -107,7 +107,6 @@
       "src/images/p50.png",
       "src/images/p10.png",
       "src/images/p5.png",
-      "src/images/splashImage.png",
       "src/images/ref/neg-y.png",
       "src/images/p1.png"
     ],
@@ -170,9 +169,16 @@
       "src/images/cards/1B.svg",
       "src/images/cards/2B.svg"
     ],
+    "html": [
+      "game.html",
+      "index.html"
+    ],
     "ttf": "661aebe2b21204b02d9e.ttf",
-    "html": "game.html",
-    "css": "edb23d6982e7f80d060d.css",
+    "css": [
+      "0cdaa9db970f65cedde5.css",
+      "edb23d6982e7f80d060d.css"
+    ],
+    "js": "src_starScores_json-bundle-b31dcbf6e5fe01a82d67.js",
     "ini": "src/sounds/desktop.ini"
   }
 }

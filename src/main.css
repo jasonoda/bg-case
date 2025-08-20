@@ -253,15 +253,7 @@ body::before {
         position: fixed;
     }
     
-    #bonusDiv {
-        bottom: 0;
-        padding-bottom: env(safe-area-inset-bottom);
-        position: fixed;
-    }
-    
-    #topDiv {
-        padding-top: env(safe-area-inset-top);
-    }
+    /* topDiv and bonusDiv moved to shared.css */
 }
 
 @media (max-width: 768px) {
@@ -300,11 +292,7 @@ body::before {
         position: fixed;
     }
     
-    #bonusDiv {
-        bottom: 0;
-        padding-bottom: env(safe-area-inset-bottom);
-        position: fixed;
-    }
+    /* topDiv and bonusDiv moved to shared.css */
 }
 
 .card-back, .card-front {
@@ -390,184 +378,23 @@ body::before {
     display: none;
 }
 
-.finalScoreOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 1;
-}
+/* finalScoreOverlay moved to shared.css */
 
-.finalScoreContent {
-    position: relative;
-    z-index: 2;
-    max-width: 800px;
-    width: 95%;
-    max-height: 90vh;
-    overflow-y: hidden;
-    /* background: rgba(0, 0, 0, 1); */
-    /* border-radius: 20px; */
-    /* padding: 0px 10px; */
-    /* border: 2px solid rgba(255, 215, 0, 0.3); */
-}
+/* finalScoreContent and related classes moved to shared.css */
 
-#finalScoreTitle {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #FFD700;
-    letter-spacing: 2px;
-}
-
-#finalScoreValue {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    color: #FFD700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.scoreBreakdownContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-}
-
-.scoreBreakdownItem {
-    display: flex;
-    align-items: center;
-    padding: 8px 15px;
-    height: auto;
-    gap: 30px;
-    position: relative;
-}
-
-.scoreBreakdownItem.totalItem {
-    /* Remove special styling for total items */
-}
-
-.breakdownLabel {
-    font-size: 16px;
-    font-weight: bold;
-    color: #FFD700;
-    text-align: left;
-    position: absolute;
-    left: 15px;
-    white-space: nowrap;
-}
-
-.breakdownJewel {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    /* margin-left: 5px; */
-}
-
-.breakdownCalculation {
-    font-size: 16px;
-    color: white;
-    font-weight: bold;
-    text-align: right;
-    white-space: nowrap;
-    min-width: 150px;
-    flex-shrink: 0;
-    position: absolute;
-    right: 15px;
-}
-
-.breakdownCount {
-    color: #4CAF50;
-}
-
-.breakdownTotal {
-    color: #FFD700;
-}
-
-/* Mobile responsive styles for final score screen */
-@media (max-width: 768px) {
-    .finalScoreContent {
-        /* padding: 20px; */
-        max-width: 95%;
-    }
-    
-    #finalScoreTitle {
-        font-size: 28px;
-    }
-    
-    #finalScoreValue {
-        font-size: 36px;
-    }
-    
-    /* Keep the same horizontal layout on mobile */
-    .scoreBreakdownItem {
-        /* Same as desktop - horizontal layout */
-    }
-    
-    .breakdownLabel {
-        font-size: 14px; /* Slightly smaller for mobile */
-    }
-    
-    .breakdownJewel {
-        width: 20px; /* Slightly smaller for mobile */
-        height: 20px;
-        transform: translateY(5px);
-    }
-    
-    .breakdownCalculation {
-        font-size: 14px; /* Slightly smaller for mobile */
-    }
-}
+/* Mobile responsive styles for final score screen moved to shared.css */
 
 /* Removed background effects */
 
-#scoreDiv1 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #f8b500;
-    letter-spacing: 2px;
-    text-align: center;
-    width: 100%;
-    position: relative;
-    z-index: 2;
-    animation: pulseScore 2s ease-in-out infinite;
-}
+/* scoreDiv1 moved to shared.css */
 
 /* Removed particle effects */
 
-@keyframes floatingParticles {
-    0% {
-        transform: translateY(0px) rotate(0deg);
-    }
-    100% {
-        transform: translateY(-100px) rotate(360deg);
-    }
-}
+/* floatingParticles animation moved to shared.css */
 
-@keyframes pulseScore {
-    0%, 100% {
-        color: #f8b500;
-    }
-    50% {
-        color: white;
-    }
-}
+/* pulseScore animation moved to shared.css */
 
-@keyframes finalScoreGlow {
-    0%, 100% {
-        color: #f8b500;
-        text-shadow: 0 0 10px rgba(248, 181, 0, 0.5);
-        transform: scale(1);
-    }
-    50% {
-        color: #ffd700;
-        text-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 35px rgba(255, 215, 0, 0.4);
-        transform: scale(1.05);
-    }
-}
+/* finalScoreGlow animation moved to shared.css */
 
 #progressBarContainer {
     width: 300px;
@@ -717,30 +544,9 @@ body::before {
     }
 }
 
-#scoreDiv2 {
-    font-size: 48px;
-    font-weight: bold;
-    color: #f8b500;
-    letter-spacing: 2px;
-    text-align: center;
-    width: 100%;
-    position: relative;
-    z-index: 2;
-    animation: finalScoreGlow 2s ease-in-out infinite;
-}
+/* scoreDiv2 moved to shared.css */
 
-@keyframes finalScoreGlow {
-    0%, 100% {
-        color: #f8b500;
-        text-shadow: 0 0 10px rgba(248, 181, 0, 0.5);
-        transform: scale(1);
-    }
-    50% {
-        color: #ffffff;
-        text-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 35px rgba(255, 255, 255, 0.4);
-        transform: scale(1.05);
-    }
-}
+/* finalScoreGlow animation moved to shared.css */
 
 /* Additional UI Elements from temp/main.css */
 .ui{
@@ -761,28 +567,7 @@ body::before {
     z-index: 3001;
 }
 
-#scoreDiv{
-    top: 5px;
-    left: 10px;
-    color: white;
-    font-size: 9pt;
-    font-weight: 700;
-    letter-spacing: 1px;
-    font-family: "Montserrat", sans-serif;
-    z-index: 9001;
-}
-
-#timerDiv{
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    color: black;
-    font-size: 9pt;
-    font-weight: 700;
-    letter-spacing: 1px;
-    font-family: "Montserrat", sans-serif;
-    z-index: 9501;
-}
+/* upperLeftDiv and upperRightDiv moved to shared.css */
 
 #frameCounter{
     position: absolute;
@@ -826,19 +611,7 @@ body::before {
     min-width: fit-content;
 }
 
-#topDiv{
-    position: absolute;
-    width: 100%;
-    height: 25px;
-    z-index: 9500;
-    background: linear-gradient(to bottom, #ffcc4d, #d29646);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    font-family: "Montserrat", sans-serif;
-    top: 0px;
-}
+/* topDiv and bonusDiv moved to shared.css */
 
 #bonusDisplay{
     text-align: center;
@@ -951,20 +724,7 @@ body::before {
     transform: scaleY(0);
 }
 
-#bonusDiv{
-    position: absolute;
-    width: 100%;
-    height: 25px;
-    z-index: 2000;
-    background: linear-gradient(to bottom, #ffcc4d, #d29646);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    font-family: "Montserrat", sans-serif;
-    bottom: 0px;
-    opacity: 0;
-}
+/* topDiv and bonusDiv moved to shared.css */
 
 #bonusButtonContainer{
     position: fixed;
@@ -991,250 +751,23 @@ body::before {
     transform: scale(1.1);
 }
 
-#startMenu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 7700;
-    pointer-events: none;
-}
+/* startMenu and startMenuContainer moved to shared.css */
 
-#startMenuContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    transition: opacity 0.5s ease-out;
-}
-
-#splashImage {
-    width: 300px;
-    height: auto;
-    max-width: 80vw;
-    opacity: 0;
-}
+/* splashImage and splashGraphic moved to shared.css */
 
 
 
+/* startGameOverlay and startGameButton moved to shared.css */
 
+/* instructionsButton styling moved to shared.css as #instructionsButton */
 
+/* instructionsOverlay, instructionsContainer, instructionsTitle, instructionLine, instructionImage, instructionDivider, closeInstructionsButton moved to shared.css */
 
+/* bonusInstructions and related classes moved to shared.css */
 
-#splashGraphic {
-    width: 70%;
-    aspect-ratio: 1;
-    border: 1px solid black;
-    border-radius: 50%;
-    background: transparent;
-    margin-bottom: 20px;
-}
+/* helperButtonItem and related classes moved to shared.css */
 
-
-
-#startGameOverlay {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 100%;
-    /* background: rgba(0, 0, 0, 0.8); */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 8000;
-    max-width: 400px;
-    /* border: 2px solid green; */
-    /* opacity: 0; */
-}
-
-#startGameButton {
-    background: linear-gradient(to bottom, #FFD700, #FF8C00);
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    font-family: "Montserrat", sans-serif;
-    letter-spacing: 2px;
-    padding: 7px 40px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    min-width: 120px;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-}
-
-#startGameButton:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-}
-
-#instructionsButton {
-    
-    color: #FFD700;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: "Montserrat", sans-serif;
-    letter-spacing: 2px;
-    padding: 12px 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    min-width: 120px;
-    
-    /* margin-top: 10px; */
-}
-
-#instructionsButton:hover {
-    transform: scale(1.05);
-}
-
-#instructionsOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    pointer-events: none;
-}
-
-#instructionsContainer {
-    background: rgba(0, 0, 0, 0.95);
-    color: white;
-    padding: 40px;
-    /* border-radius: 15px; */
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-    font-family: "Montserrat", sans-serif;
-}
-
-#instructionsTitle {
-    font-size: 28px;
-    font-weight: bold;
-    color: #f8b500;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-#instructionsText {
-    margin-bottom: 20px;
-}
-
-.instructionLine {
-    font-size: 16px;
-    margin-bottom: 6px;
-    color: #cccccc;
-    text-transform: lowercase;
-}
-
-#cardImages {
-    margin: 30px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.instructionDivider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 6px 0;
-    width: 100%;
-}
-
-#bonusInstructions {
-    margin-bottom: 30px;
-}
-
-.bonusItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-.bonusImage {
-    width: 40px;
-    height: 40px;
-    margin-right: 15px;
-    object-fit: contain;
-}
-
-.bonusDescription {
-    font-size: 14px;
-    color: #1abe7c;
-    text-align: left;
-    flex: 1;
-}
-
-.helperButtonItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: rgba(255, 204, 77, 0.1);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 204, 77, 0.3);
-}
-
-.helperButtonIcon {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffcc4d;
-    margin-right: 15px;
-    padding: 8px 12px;
-    background: rgba(255, 204, 77, 0.2);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 204, 77, 0.5);
-    min-width: 80px;
-    text-align: center;
-}
-
-.helperButtonDescription {
-    font-size: 14px;
-    color: #ffffff;
-    text-align: left;
-    flex: 1;
-    line-height: 1.4;
-}
-
-/* Add extra space after the helper buttons header */
-.helperButtonsHeader {
-    margin-top: 25px;
-    margin-bottom: 25px;
-}
-
-#closeInstructionsButton {
-    
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: "Montserrat", sans-serif;
-    letter-spacing: 2px;
-    padding: 12px 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    display: inline-block;
-   
-}
-
-#closeInstructionsButton:hover {
-    transform: scale(1.05);
-}
+/* closeInstructionsButton moved to shared.css */
 
 #scorePopup{
     position: fixed;
@@ -2764,5 +2297,83 @@ body::before {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s ease;
+}
+
+/* HELPER BUTTON STYLES */
+.helperButtonItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.helperButtonIcon {
+    background: linear-gradient(90deg, #0c0c0c 0%, #1a1a1a 25%, #4a2a0a 50%, #1a1a1a 75%, #0c0c0c 100%);
+    background-size: 200% 100%;
+    color: #ffbb00;
+    border: 2px solid #ffbb00;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 
+        0 0 20px rgba(255, 140, 0, 0.3),
+        inset 0 0 20px rgba(255, 140, 0, 0.1),
+        0 4px 15px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    padding: 8px 16px;
+    position: relative;
+    overflow: hidden;
+    animation: backgroundWipe 4s linear infinite;
+}
+
+.helperButtonDescription {
+    color: #cccccc;
+    font-size: 13px;
+    font-family: "Montserrat", sans-serif;
+    line-height: 1.4;
+    flex: 1;
+}
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+
+/* COLOR GRAPHICS  */
+/* Colors are now defined in shared.css */
+
+/* Additional instruction elements not in shared.css */
+#instructionsImage {
+    width: 150px;
+}
+
+#instructionsText {
+    margin-bottom: 20px;
+}
+
+#playButton {
+    background: linear-gradient(to bottom, #ffe259, #ffa751);
+    color: black;
+}
+
+#instructionsButton{
+    color: #ffe259;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+#topDiv, #bonusDiv {
+    background: linear-gradient(to bottom, #ffe259, #ffa751);
+}
+
+#upperLeftDiv, #upperRightDiv{
+    color: black;
 }
 

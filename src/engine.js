@@ -4,7 +4,7 @@ import AES from 'crypto-js/aes';
 import enc from 'crypto-js/enc-utf8';
 
 export default class Engine{
-    constructor(input, loader, scene, sounds, suitcase, utilities, ui){
+    constructor(input, loader, scene, sounds, suitcase, utilities, ui, endScore){
 
         this.input = input;
         this.loader = loader;
@@ -13,7 +13,7 @@ export default class Engine{
         this.ui = ui;
         this.suitcase = suitcase;
         this.u = utilities;
-        this.suitcase = suitcase;
+        this.endScore = endScore;
 
         this.mobile = false;
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent ) || window.innerWidth<600) {

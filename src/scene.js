@@ -54,9 +54,9 @@ export class Scene {
         this.usedNextToNumbers = new Set(); // Track which numbers have been used as "next to" numbers
         
         // Initialize timer display
-        const timerDiv = document.getElementById('timerDiv');
-        if (timerDiv) {
-            timerDiv.textContent = this.formatTime(this.gameTime);
+        const upperRightDiv = document.getElementById('upperRightDiv');
+        if (upperRightDiv) {
+            upperRightDiv.textContent = this.formatTime(this.gameTime);
         }
 
         if(this.debugClue!==""){
@@ -267,10 +267,10 @@ export class Scene {
                 }
             });
             
-            // Add click listener to start game button
-            const startGameButton = document.getElementById('startGameButton');
-            if (startGameButton) {
-                startGameButton.addEventListener('click', () => {
+            // Add click listener to play button
+            const playButton = document.getElementById('playButton');
+            if (playButton) {
+                playButton.addEventListener('click', () => {
   
                     // Play press start sound
                     this.e.s.p("brightClick");
@@ -279,19 +279,19 @@ export class Scene {
                     document.getElementById('fader').style.opacity = .75;
                     gsap.to(document.getElementById('fader'), {
                         opacity: 0,
-                        duration: 1.5,
+                        duration: 1,
                         ease: "linear"
                     });
 
-                    // Fade out the start game overlay quickly
-                    const overlay = document.getElementById('startGameOverlay');
-                    if (overlay) {
-                        gsap.to(overlay, {
+                    // Hide the start menu
+                    const startMenu = document.getElementById('startMenu');
+                    if (startMenu) {
+                        gsap.to(startMenu, {
                             opacity: 0,
                             duration: 0.3,
                             ease: "power2.out",
                             onComplete: () => {
-                                overlay.style.display = 'none';
+                                startMenu.style.display = 'none';
                                 
                                 // Fade in the game container over 1 second
                                 const gameContainer = document.getElementById('gameContainer');
@@ -1883,16 +1883,6 @@ export class Scene {
         `;
         document.body.appendChild(explosion);
         
-        // Create confetti pieces
-        for (let i = 0; i < 100; i++) {
-            this.createConfettiPiece(explosion);
-        }
-        
-        // Create spark particles
-        for (let i = 0; i < 50; i++) {
-            this.createSparkParticle(explosion);
-        }
-        
         // Remove explosion after animation
         setTimeout(() => {
             if (explosion.parentNode) {
@@ -1901,65 +1891,9 @@ export class Scene {
         }, 3000);
     }
     
-    createConfettiPiece(container) {
-        const confetti = document.createElement('div');
-        const colors = ['#FFD700', '#FFA500', '#FF8C00', '#FF6347', '#FF4500'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        
-        confetti.style.cssText = `
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: ${color};
-            border-radius: 2px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        `;
-        
-        container.appendChild(confetti);
-        
-        // Animate confetti with GSAP
-        gsap.to(confetti, {
-            duration: 2 + Math.random() * 2,
-            x: (Math.random() - 0.5) * 800,
-            y: (Math.random() - 0.5) * 600,
-            rotation: Math.random() * 720,
-            opacity: 0,
-            ease: "power2.out",
-            delay: Math.random() * 0.5
-        });
-    }
+
     
-    createSparkParticle(container) {
-        const spark = document.createElement('div');
-        spark.style.cssText = `
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #FFD700;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            box-shadow: 0 0 10px #FFD700;
-        `;
-        
-        container.appendChild(spark);
-        
-        // Animate spark with GSAP
-        gsap.to(spark, {
-            duration: 1.5 + Math.random() * 1,
-            x: (Math.random() - 0.5) * 400,
-            y: (Math.random() - 0.5) * 300,
-            scale: 0,
-            opacity: 0,
-            ease: "power3.out",
-            delay: Math.random() * 0.3
-        });
-    }
+
     
     flashScreenGold() {
         const flash = document.createElement('div');
@@ -1990,102 +1924,29 @@ export class Scene {
     }
     
     createDealAmountOverlay(dealValue) {
-        // Create black overlay
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 16000;
-            opacity: 0;
-        `;
-        
-        // Create deal amount text
-        const dealText = document.createElement('div');
-        dealText.style.cssText = `
-            font-family: 'Montserrat', sans-serif;
-            font-size: 72px;
-            font-weight: bold;
-            color: #FFD700;
-            text-align: center;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-            opacity: 0;
-            transform: scale(0.5);
-            margin-bottom: 40px;
-        `;
-        dealText.textContent = `$${dealValue.toLocaleString()}`;
-        
-        overlay.appendChild(dealText);
-        document.body.appendChild(overlay);
-        
-        // Animate overlay and text with GSAP
-        gsap.to(overlay, {
-            duration: 0.8,
-            opacity: 1,
-            ease: "power2.out"
-        });
-        
-        gsap.to(dealText, {
-            duration: 1.2,
-            opacity: 1,
-            scale: 1,
-            ease: "back.out(1.7)"
-        });
-        
-        // Add glowing animation
-        gsap.to(dealText, {
-            duration: 2,
-            color: "#FFFFFF",
-            textShadow: "0 0 40px rgba(255, 255, 255, 0.9)",
-            ease: "power2.inOut",
-            yoyo: true,
-            repeat: -1
-        });
+
+        console.log("endcall")
+        // Use endScore to create the final score overlay
+        // Pass the time bonus as the only stat to display
+        const statsArray = [['TIME BONUS', this.timeBonus]];
+        this.e.endScore.createFinalScoreOverlay(dealValue, statsArray);
         
         // Add examine remaining cases button after 2 seconds
         setTimeout(() => {
-            this.addExamineRemainingCasesButton(overlay);
+            this.addExamineRemainingCasesButton();
         }, 2000);
     }
     
-    addExamineRemainingCasesButton(overlay) {
-        // Create time bonus text field
-        const timeBonusText = document.createElement('div');
-        timeBonusText.style.cssText = `
-            position: absolute;
-            top: 33%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-            color: #FFD700;
-            text-align: center;
-            opacity: 0;
-            transform: translateX(-50%) translateY(-20px);
-        `;
-        
-        // Set text content based on time remaining
-        if (this.gameTime <= 0) {
-            timeBonusText.textContent = 'RAN OUT OF TIME';
-        } else {
-            timeBonusText.textContent = `TIME BONUS: $${this.timeBonus.toLocaleString()}`;
-        }
-        
-        overlay.appendChild(timeBonusText);
+    addExamineRemainingCasesButton() {
+        // Find the final score overlay created by endScore
+        const overlay = document.querySelector('.finalScoreOverlay');
+        if (!overlay) return;
         
         // Create examine button
         const examineButton = document.createElement('button');
         examineButton.style.cssText = `
             position: absolute;
-            bottom: 33%;
+            bottom: 15%;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Montserrat', sans-serif;
@@ -2107,11 +1968,10 @@ export class Scene {
         
         overlay.appendChild(examineButton);
         
-        // Animate both elements in simultaneously
-        gsap.to([timeBonusText, examineButton], {
+        // Animate button in
+        gsap.to(examineButton, {
             duration: 0.8,
             opacity: 1,
-            // y: 0,
             ease: "sine.out"
         });
         
@@ -2298,10 +2158,6 @@ export class Scene {
         // Disable other action buttons during pick 3 mode
         this.disableActionButtons([0, 1, 2]); // Disable FREE CLUE, PICK 3, and DOUBLE buttons
         
-        //console.log("After marking PICK 3 as used and disabling all buttons:");
-        this.logButtonUsageStates();
-        this.logActionButtonStates();
-        
         // Show persistent instruction popup over bottom section
         this.showPickThreePopup("Pick three cases: the LOWEST value case will be revealed");
         
@@ -2476,10 +2332,6 @@ export class Scene {
     }
     
     enableActionButtonsRespectingUsage(buttonIndices) {
-        // Re-enable action buttons based on their usage state
-        //console.log(`enableActionButtonsRespectingUsage called with indices: [${buttonIndices}]`);
-        this.logButtonUsageStates();
-        this.logActionButtonStates();
         
         const actionButtons = document.querySelectorAll('.action-button');
         buttonIndices.forEach(index => {
@@ -2506,8 +2358,6 @@ export class Scene {
             }
         });
         
-        //console.log("After re-enabling, button states:");
-        this.logActionButtonStates();
     }
     
     disableAllCaseButtons() {
@@ -2530,10 +2380,10 @@ export class Scene {
 
     
     startGame() {
-        // Hide start button
-        const startButton = document.getElementById('startGameButton');
-        if (startButton) {
-            startButton.style.display = 'none';
+        // Hide start menu
+        const startMenu = document.getElementById('startMenu');
+        if (startMenu) {
+            startMenu.style.display = 'none';
         }
         
         // Reset available clues to ensure fresh start (preserve multiple instances of nextTo)
@@ -2592,15 +2442,15 @@ export class Scene {
     }
     
     createTimerDisplay() {
-        // Use the existing timerDiv instead of creating a new element
+        // Use the existing upperRightDiv instead of creating a new element
         this.updateTimerDisplay();
     }
     
     updateTimerDisplay() {
-        const timerDiv = document.getElementById('timerDiv');
-        if (timerDiv && this.gameStarted) {
+        const upperRightDiv = document.getElementById('upperRightDiv');
+        if (upperRightDiv && this.gameStarted) {
             const timeString = this.formatTime(this.gameTime);
-            timerDiv.textContent = timeString;
+            upperRightDiv.textContent = timeString;
             
             // Play ticking sound when less than 15 seconds left
             if (this.gameTime <= 15 && this.gameTime > 0) {
@@ -2661,9 +2511,6 @@ export class Scene {
     }
     
     enableAllButtonsForGame() {
-
-        //console.log("enableAllButtonsForGame");
-        this.logButtonUsageStates(); // Debug: show current button states
 
         // Re-enable action buttons based on their usage state
         const actionButtons = document.querySelectorAll('.action-button');
@@ -3027,117 +2874,16 @@ export class Scene {
         //console.log("All button usage states reset");
     }
     
-    logButtonUsageStates() {
-        // Debug method to show current button usage states
-        //console.log("Current button usage states:", this.buttonUsageStates);
-    }
-    
-    logActionButtonStates() {
-        // Debug method to show current enabled/disabled state of all action buttons
-        const actionButtons = document.querySelectorAll('.action-button');
-        actionButtons.forEach((button, index) => {
-            const buttonNames = ['FREE CLUE', 'PICK 3', 'DOUBLE'];
-            //console.log(`Action button ${index} (${buttonNames[index]}): disabled=${button.disabled}, cursor=${button.style.cursor}`);
-        });
-    }
-    
-    testClueButton() {
-        // Test method to check clue button state
-        const clueButton = document.getElementById('clueButton');
-        if (clueButton) {
-            //console.log("=== CLUE BUTTON TEST ===");
-            //console.log("Element found:", clueButton);
-            //console.log("Tag name:", clueButton.tagName);
-            //console.log("ID:", clueButton.id);
-            //console.log("Classes:", clueButton.className);
-            //console.log("Disabled:", clueButton.disabled);
-            //console.log("Style disabled:", clueButton.style.disabled);
-            //console.log("Cursor:", clueButton.style.cursor);
-            //console.log("Pointer events:", clueButton.style.pointerEvents);
-            //console.log("Z-index:", clueButton.style.zIndex);
-            //console.log("Position:", clueButton.style.position);
-            //console.log("Display:", clueButton.style.display);
-            //console.log("Visibility:", clueButton.style.visibility);
-            //console.log("Opacity:", clueButton.style.opacity);
-            //console.log("Click handlers:", clueButton.onclick);
-            //console.log("Parent:", clueButton.parentElement);
-            //console.log("Parent disabled:", clueButton.parentElement?.disabled);
-            //console.log("Parent pointer events:", clueButton.parentElement?.style.pointerEvents);
-            
-            // Check for event listeners
-            //console.log("Event listeners:", clueButton._listeners || "None");
-            //console.log("addEventListener exists:", typeof clueButton.addEventListener);
-            
-            // Try to manually trigger a click
-            try {
-                clueButton.click();
-                //console.log("Manual click() called successfully");
-            } catch (e) {
-                //console.error("Error calling click():", e);
-            }
-            
-            // Try to add a simple test listener
-            try {
-                clueButton.addEventListener('test', () => {
-                    //console.log("Test listener works");
-                });
-                clueButton.dispatchEvent(new Event('test'));
-                //console.log("Test event dispatched successfully");
-            } catch (e) {
-                //console.error("Error with test event:", e);
-            }
-            
-            //console.log("=========================");
-        } else {
-            //console.error("Clue button element not found!");
-        }
-    }
-    
     enableClueButtonForEndGame() {
         
-        //console.log("enableClueButtonForEndGame called");
-        // Enable the clue button specifically when the game ends
+        console.log("enableClueButtonForEndGame called");
         const clueButton = document.getElementById('clueButton');
         if (clueButton) {
-            // Force enable the button
+           
             clueButton.disabled = false;
             clueButton.style.cursor = "pointer";
             clueButton.style.pointerEvents = "auto";
             
-            //console.log("=== CLUE BUTTON DEBUG ===");
-            //console.log("Clue button element:", clueButton);
-            //console.log("Disabled:", clueButton.disabled);
-            //console.log("Cursor:", clueButton.style.cursor);
-            //console.log("Pointer events:", clueButton.style.pointerEvents);
-            //console.log("Z-index:", clueButton.style.zIndex);
-            //console.log("Position:", clueButton.style.position);
-            //console.log("Display:", clueButton.style.display);
-            //console.log("Visibility:", clueButton.style.visibility);
-            //console.log("Opacity:", clueButton.style.opacity);
-            //console.log("Click handlers:", clueButton.onclick);
-            //console.log("Event listeners:", clueButton._listeners || "None");
-            //console.log("=========================");
-            
-            // Test if it's actually clickable by adding a test click
-            clueButton.onclick = function(e) {
-                //console.log("CLUE BUTTON CLICKED!", e);
-                // alert("Clue button is working!");
-            };
-            
-            // Also try adding a direct event listener
-            try {
-                clueButton.addEventListener('click', function(e) {
-                    //console.log("CLUE BUTTON CLICKED VIA ADD EVENT LISTENER!", e);
-                    // alert("Clue button addEventListener works!");
-                });
-                //console.log("Added click event listener successfully");
-            } catch (e) {
-                //console.error("Failed to add event listener:", e);
-            }
-            
-            //console.log("Clue button enabled for end game with test click handler");
-        } else {
-            //console.error("Clue button element not found!");
         }
     }
     
